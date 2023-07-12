@@ -579,8 +579,8 @@ namespace cards.Utils
 
         public static bool CheckTrial(List<Card> cardInHand)
         {
-            if (cardInHand[0].GetCardNumber() == cardInHand[1].GetCardNumber() &&
-                cardInHand[0].GetCardNumber() == cardInHand[2].GetCardNumber())
+            if (cardInHand[0].GetCardValue() == cardInHand[1].GetCardValue() &&
+                cardInHand[0].GetCardValue() == cardInHand[2].GetCardValue())
             {
 
                 return true;    
@@ -603,9 +603,9 @@ namespace cards.Utils
             { 
                 return false; 
             }
-            if (cardInHand[0].GetCardNumber() == cardInHand[1].GetCardNumber() ||
-                cardInHand[0].GetCardNumber() == cardInHand[2].GetCardNumber() ||
-                cardInHand[1].GetCardNumber() == cardInHand[2].GetCardNumber())
+            if (cardInHand[0].GetCardValue() == cardInHand[1].GetCardValue() ||
+                cardInHand[0].GetCardValue() == cardInHand[2].GetCardValue() ||
+                cardInHand[1].GetCardValue() == cardInHand[2].GetCardValue())
             {
 
                 return true;
@@ -636,7 +636,7 @@ namespace cards.Utils
             List<int> listvalue = new List<int>();
             foreach (var item in cardInHand)
             {
-                var temp = item.GetCardNumber();
+                var temp = item.GetCardValue();
                 listvalue.Add(CardConversion.ConversionValuetoInteger(temp));
             }
             return listvalue;

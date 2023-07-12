@@ -14,6 +14,7 @@ namespace cards.Cards_files
         Color,
         Double,
         Common,
+        Quad,       // For Kitty
         NotDecided,
     }
 }

@@ -22,7 +22,7 @@ namespace cards.Test
             {
                 Console.WriteLine(i);
                 Console.WriteLine(d.TotalDeck[i].GetCardType());
-                Console.WriteLine(d.TotalDeck[i].GetCardNumber());
+                Console.WriteLine(d.TotalDeck[i].GetCardValue());
                 if (!d.HaveCard(c.TotalDeck[i]))
                 {
                     test = false;
@@ -36,19 +36,19 @@ namespace cards.Test
         public void Removeat_test()
         {
             var c = new CardCompleteDeck();
-            Card x = new Card(c.TotalDeck[51].GetCardType(), c.TotalDeck[51].GetCardNumber());
+            Card x = new Card(c.TotalDeck[51].GetCardType(), c.TotalDeck[51].GetCardValue());
             Console.WriteLine("Top card is : ");
             Console.WriteLine(x.GetCardType());
-            Console.WriteLine(x.GetCardNumber());
+            Console.WriteLine(x.GetCardValue());
             c.RemoveAt(51);
             Assert.IsTrue(c.TotalDeck.Count()==51);
             Assert.IsFalse(c.HaveCard(x));
 
             c.AddCard(x);
-            Card y = new Card(c.TotalDeck[51].GetCardType(), c.TotalDeck[51].GetCardNumber());
+            Card y = new Card(c.TotalDeck[51].GetCardType(), c.TotalDeck[51].GetCardValue());
             Console.WriteLine("Top card is : ");
             Console.WriteLine(y.GetCardType());
-            Console.WriteLine(y.GetCardNumber());
+            Console.WriteLine(y.GetCardValue());
             Assert.IsTrue(c.TotalDeck.Count() == 52);
             Assert.IsTrue(c.HaveCard(x));
         }

@@ -1,4 +1,5 @@
 ﻿using cards.Cards_files;
+using cards.Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,10 +74,13 @@ namespace cards.Utils
             {
                 for (int j = 1; j < 4; j++)
                 {
-                    if (CheckTrial(playerlist[i].CardInHand))
+                    if (CheckXnumCards(playerlist[i],4,CardStrength.Quad))// checking quads
                     {
-                        p.strength = CardStrength.Trial;
-                        p.cardsinInteger = GetCardValue(p.CardInHand);
+                        
+                    }
+                    else if (CheckXnumCards(playerlist[i],3,CardStrength.Trial))
+                    {
+
                     }
                     else if (CheckColor(playerlist[i].CardInHand) && CheckRun(playerlist[i].CardInHand))
                     {
@@ -116,12 +120,33 @@ namespace cards.Utils
             }
         }
 
-        private static bool CheckTrial(List<Card> cardInHand)
+        private static bool CheckXnumCards(Player.Player p,int num,CardStrength cardstrength)
         {
-            foreach (var item in cardInHand)
+            Dictionary<CardValue, int> countMap = new Dictionary<CardValue, int>();
+            foreach (var card in p.CardInHand)
             {
-                // get 
+                if (countMap.ContainsKey(card.GetCardValue()))
+                {
+                    countMap[card.GetCardValue()]++;
+                    if (countMap[card.GetCardValue()] >= num)
+                    {
+                        p.kittyStrength[cardstrength] = card.GetCardValue();
+                    }
+                }
+                else
+                {
+                    countMap[card.GetCardValue()] = 1;
+                }
 
+            }
+            if ( p.kittyStrength.ContainsKey(cardstrength))
+            {
+                // removing card in hand
+                foreach (var card in p.CardInHand)
+                {
+                    if (card.GetCardValue() == p.kittyStrength[cardstrength]) { }
+                }
+                return true;
             }
             return false;
         }

@@ -11,9 +11,12 @@ namespace cards.Player
     {
         private string Name = "Default Name";
         public List<Card> CardInHand = new List<Card>();
+
         public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
-        public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
+        public Dictionary<CardStrength,List <CardValue>> kittyStrength = new Dictionary<CardStrength, List<CardValue>>(); //for kitty
+        
         public CardStrength strength = new CardStrength();
+
         public CardResult result = new CardResult();
         public List<int> cardsinInteger = new List<int>();
         public double balance = new double();
@@ -33,7 +36,7 @@ namespace cards.Player
             string messagetoprint = "";
             foreach(Card card in CardInHand)
             {
-                messagetoprint = messagetoprint+" *" + card.GetCardType() + card.GetCardNumber() + "*";
+                messagetoprint = messagetoprint+" *" + card.GetCardType() + card.GetCardValue() + "*";
             }
             Console.WriteLine(messagetoprint);
         }
@@ -48,7 +51,7 @@ namespace cards.Player
             for (int i = 0; i < CardInHand.Count(); i++)
             {
                 if (card.GetCardType() == CardInHand[i].GetCardType() &&
-                    card.GetCardNumber() == CardInHand[i].GetCardNumber())
+                    card.GetCardValue() == CardInHand[i].GetCardValue())
                 {
                     CardInHand.RemoveAt(i);
                     ShowPickThrowMessage(card, false,reveal);
@@ -66,7 +69,7 @@ namespace cards.Player
             string acard,hashave="has";
             if(reveal)
             {
-                acard= ""+card.GetCardType() + card.GetCardNumber();
+                acard= ""+card.GetCardType() + card.GetCardValue();
             }
             else
             {
@@ -103,6 +106,21 @@ namespace cards.Player
         public void AddBalance(double sum)
         {
             balance = balance + sum;
+        }
+        public void RemoveAt(int index)
+        {
+            CardInHand.RemoveAt(index);
+        }
+        public void Remove(Card card)
+        {
+            for (int i = 0; i < CardInHand.Count(); i++)
+            {
+                if (card.GetCardType() == CardInHand[i].GetCardType() &&
+                    card.GetCardValue() == CardInHand[i].GetCardValue())
+                {
+                    CardInHand.RemoveAt(i);
+                }
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ namespace cards.Cards_files
         {
             return this.Type;
         }
-        public CardValue GetCardNumber()
+        public CardValue GetCardValue()
         {
             return this.Number;
         }

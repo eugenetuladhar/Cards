@@ -50,7 +50,7 @@ namespace cards.Cards_files
             for (int i = 0; i < TotalDeck.Count(); i++)
             {
                 if (card.GetCardType() == TotalDeck[i].GetCardType() &&
-                    card.GetCardNumber() == TotalDeck[i].GetCardNumber())
+                    card.GetCardValue() == TotalDeck[i].GetCardValue())
                 {
                     have= true;
                 }
@@ -66,7 +66,7 @@ namespace cards.Cards_files
             for (int i = 0; i < TotalDeck.Count(); i++)
             {
                 if (card.GetCardType() == TotalDeck[i].GetCardType() &&
-                    card.GetCardNumber() == TotalDeck[i].GetCardNumber())
+                    card.GetCardValue() == TotalDeck[i].GetCardValue())
                 {
                     TotalDeck.RemoveAt(i);
                     return true;
