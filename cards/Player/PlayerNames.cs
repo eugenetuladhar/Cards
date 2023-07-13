@@ -16,6 +16,9 @@ namespace cards.Player
         Jim,
         Pam,
         Linda,
-        Harry
+        Harry,
+        Kate,
+        Joe,
+        George
     }
 }

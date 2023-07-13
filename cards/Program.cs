@@ -9,14 +9,14 @@ Console.WriteLine("Test Cards");
 
 bool mainmenu = true;
 string value="";
-string playagain = "N";
+string playagain = "n";
 while (mainmenu)
 {
     if(playagain!="y")
     { 
     Console.WriteLine(" Which game to play ?");
     Console.WriteLine(" 1 . Flash");
-    Console.WriteLine(" 2 . Kitty");
+    Console.WriteLine(" 2 . Kitty (Under Construction)");
         Console.WriteLine(" 0 . Exit");
         value = Console.ReadLine();
     }

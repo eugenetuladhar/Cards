@@ -8,23 +8,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using cards.Interface;
+using Newtonsoft.Json.Linq;
 
 namespace cards.Utils
 {
     public class FlashLogic
     {
+        
         public static void RunFlash() 
         {
+            Cardlogiccs.CurrentGame = GameType.FLASH;
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
             Console.WriteLine("*** New Card deck created ***");
             // pleyer logic
             List<Player.Player> playerlist = new List<Player.Player>();
-            bool t = true;
+            bool menu = true;
             int numofplayers=0;
-            while (t)
+            while (menu)
             {
-                Console.WriteLine(" Enter number of players :");
+                Console.WriteLine(" Enter number of players (MIN:2, MAX:10):");
                 try
                 {
                     numofplayers = int.Parse(Console.ReadLine());
@@ -34,24 +38,13 @@ namespace cards.Utils
                 {
                     Console.WriteLine("You have entered Invalid Number ");
                 }
-                switch (numofplayers)
+                if (numofplayers > 1 && numofplayers < 11)
                 {
-                    case 2:
-                        t=false;
-                        break;
-                    case 3:
-                        t = false;
-                        break;
-                    case 4:
-                        t = false;
-                        break;
-                    case 5:
-                        t = false;
-                        break;
-                    default: 
-                        Console.WriteLine(" Invalid number or too high ");
-                        Console.WriteLine(" Again! ");
-                        break;
+                    menu=false;
+                }
+                else
+                {
+                    Console.WriteLine(" Try Again! ");
                 }
             }
 
@@ -78,49 +71,41 @@ namespace cards.Utils
         }
         public static void DetermineWinner(List<Player.Player> list)
         {
-            Cardlogiccs.ShowAllPlayersCard(list);
             foreach (var p in list)
             {
+                p.cardsinInteger = Cardlogiccs.GetCardIntegerValue(p.CardInHand);
                 if (CheckTrial(p.CardInHand))
                 {
                     p.strength = CardStrength.Trial;
-                    p.cardsinInteger =GetCardValue(p.CardInHand);
                 }
                 else if(CheckColor(p.CardInHand) && CheckRun(p.CardInHand))
                 {
                     p.strength = CardStrength.ColorSequence;
-                    p.cardsinInteger = GetCardValue(p.CardInHand);
                     p.cardsinInteger.Sort();
                 }
                 else if(CheckRun(p.CardInHand))
                 {
                     p.strength = CardStrength.Sequence;
-                    p.cardsinInteger = GetCardValue(p.CardInHand);
                     p.cardsinInteger.Sort();
-
                 }
                 else if (CheckColor(p.CardInHand))
                 {
                     p.strength = CardStrength.Color;
-                    p.cardsinInteger = GetCardValue(p.CardInHand);
                     p.cardsinInteger.Sort();
-
                 }
                 else if (CheckJoot(p.CardInHand))
                 {
                     p.strength = CardStrength.Double;
-                    p.cardsinInteger = GetCardValue(p.CardInHand);
                     p.cardsinInteger.Sort();
-
                 }
                 else
                 {
                     p.strength = CardStrength.Common;
-                    p.cardsinInteger = GetCardValue(p.CardInHand);
                     p.cardsinInteger.Sort();
-
                 }
             }
+            Cardlogiccs.ShowAllPlayersCard(list);
+
             CalculateWinner(list);
             Console.WriteLine("");
             Console.WriteLine("** Calculating Winner........ **");
@@ -618,7 +603,7 @@ namespace cards.Utils
             {
                 return false;
             }
-            List<int> cardvalue = GetCardValue(cardInHand);
+            List<int> cardvalue = Cardlogiccs.GetCardIntegerValue(cardInHand);
             cardvalue.Sort();
             if (cardvalue[0] == cardvalue[1]-1 && cardvalue[2] == cardvalue[1] + 1)
             {
@@ -631,15 +616,15 @@ namespace cards.Utils
             return false; 
         }
 
-        private static List<int> GetCardValue(List<Card> cardInHand)
-        {
-            List<int> listvalue = new List<int>();
-            foreach (var item in cardInHand)
-            {
-                var temp = item.GetCardValue();
-                listvalue.Add(CardConversion.ConversionValuetoInteger(temp));
-            }
-            return listvalue;
-        }
+        //private static List<int> GetCardIntegerValue(List<Card> cardInHand)
+        //{
+        //    List<int> listvalue = new List<int>();
+        //    foreach (var singlecard in cardInHand)
+        //    {
+        //        var value = singlecard.GetCardValue();
+        //        listvalue.Add(CardConversion.ConversionValuetoInteger(value));
+        //    }
+        //    return listvalue;
+        //}
     }
 }

@@ -10,6 +10,7 @@ namespace cards.Utils
 {
     public static class Cardlogiccs
     {
+        public static GameType CurrentGame { get; set; }
         public static void Deal(List<Player.Player> list, CardCompleteDeck c, int numberofcardstodeal,bool reveal = true)
         {
             Console.WriteLine("*** Dealing cards ***");
@@ -31,7 +32,15 @@ namespace cards.Utils
                 {
                     hashave = "have";
                 }
-                Console.WriteLine($" {player.GetName} {hashave} :");
+
+                if (CurrentGame == GameType.FLASH)
+                {
+                    Console.WriteLine($" {player.GetName} {hashave} {player.strength} :");
+                }
+                else
+                {
+                    Console.WriteLine($" {player.GetName} {hashave} :");
+                }
                 player.GetCardtoPrint();
             }
 
@@ -45,6 +54,16 @@ namespace cards.Utils
                 playerlist.Add(new Player.Player(playername.ToString()));
             }
             return playerlist;
+        }
+        public static List<int> GetCardIntegerValue(List<Card> cardInHand)
+        {
+            List<int> listvalue = new List<int>();
+            foreach (var singlecard in cardInHand)
+            {
+                var value = singlecard.GetCardValue();
+                listvalue.Add(CardConversion.ConversionValuetoInteger(value));
+            }
+            return listvalue;
         }
     }
 }
