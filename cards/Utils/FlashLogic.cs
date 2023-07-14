@@ -24,31 +24,7 @@ namespace cards.Utils
             Console.WriteLine("*** New Card deck created ***");
             // pleyer logic
             List<Player.Player> playerlist = new List<Player.Player>();
-            bool menu = true;
-            int numofplayers=0;
-            while (menu)
-            {
-                Console.WriteLine(" Enter number of players (MIN:2, MAX:10):");
-                try
-                {
-                    numofplayers = int.Parse(Console.ReadLine());
-
-                }
-                catch
-                {
-                    Console.WriteLine("You have entered Invalid Number ");
-                }
-                if (numofplayers > 1 && numofplayers < 11)
-                {
-                    menu=false;
-                }
-                else
-                {
-                    Console.WriteLine(" Try Again! ");
-                }
-            }
-
-            playerlist = Cardlogiccs.GetPlayers(numofplayers);
+            playerlist = Cardlogiccs.GetPlayers();
             
             //shuffle
             carddeck.Shuffle();
@@ -110,16 +86,8 @@ namespace cards.Utils
             Console.WriteLine("");
             Console.WriteLine("** Calculating Winner........ **");
             Console.ReadLine();
-            foreach (var player in Winnerlist)
-            {
-                string hashave = "has";
-                if (player.Checkplayer_you())
-                {
-                    hashave = "have";
-                }
-                Console.WriteLine($"{player.GetName} {hashave} won with {player.strength}");
-                player.GetCardtoPrint();
-            }
+            //Display winners
+            Cardlogiccs.ShowAllPlayersCard(Winnerlist);
         }
 
         private static void CalculateWinner(List<Player.Player> list)
@@ -615,16 +583,5 @@ namespace cards.Utils
             }
             return false; 
         }
-
-        //private static List<int> GetCardIntegerValue(List<Card> cardInHand)
-        //{
-        //    List<int> listvalue = new List<int>();
-        //    foreach (var singlecard in cardInHand)
-        //    {
-        //        var value = singlecard.GetCardValue();
-        //        listvalue.Add(CardConversion.ConversionValuetoInteger(value));
-        //    }
-        //    return listvalue;
-        //}
     }
 }

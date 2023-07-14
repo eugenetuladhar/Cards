@@ -22,6 +22,49 @@ namespace cards.Utils
                 }
             }
         }
+        public static int ReadNumberOfPlayers()
+        {
+            int maxnum = GetMaxNumPlayers();
+            
+            int numofplayers = 0;
+            while (true)
+            {
+                Console.WriteLine($" Enter number of players (Min = 2 , Max = {maxnum}) :");
+                try
+                {
+                    numofplayers = int.Parse(Console.ReadLine());
+
+                }
+                catch
+                {
+                    Console.WriteLine("You have entered Invalid Number ");
+                }
+                if (numofplayers > 1 && numofplayers < 11)
+                {
+                    return numofplayers;
+                }
+                else
+                {
+                    Console.WriteLine(" Try Again! ");
+                }
+            }
+        }
+
+        private static int GetMaxNumPlayers()
+        {
+            if (CurrentGame == GameType.FLASH)
+            {
+                return 10;
+            }
+            else if (CurrentGame == GameType.KITTY)
+            {
+                return 5;
+            }
+            else
+            {
+                return 3;
+            }
+        }
 
         public static void ShowAllPlayersCard(List<Player.Player> list)
         {
@@ -41,12 +84,13 @@ namespace cards.Utils
                 {
                     Console.WriteLine($" {player.GetName} {hashave} :");
                 }
-                player.GetCardtoPrint();
+                player.DisplayeCardInHand();
             }
 
         }
-        public static List<Player.Player> GetPlayers(int numofplayers)
+        public static List<Player.Player> GetPlayers()
         {
+            int numofplayers = ReadNumberOfPlayers();
             List<Player.Player> playerlist = new List<Player.Player>();
             for (int i = 0; i < numofplayers; i++)
             {

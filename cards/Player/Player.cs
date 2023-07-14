@@ -13,25 +13,25 @@ namespace cards.Player
         public List<Card> CardInHand = new List<Card>();
 
         public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
-        public Dictionary<CardStrength,List <CardValue>> kittyStrength = new Dictionary<CardStrength, List<CardValue>>(); //for kitty
+        public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
         
         public CardStrength strength = new CardStrength();
 
         public CardResult result = new CardResult();
         public List<int> cardsinInteger = new List<int>();
-        public double balance = new double();
+        public double Balance = new double();
         public Player(string name,double bal=0)
         {
             Name = name;
             strength = CardStrength.NotDecided;
             result = CardResult.NONE;
-            balance = bal;
+            Balance = bal;
         }
         public string GetName
         {
             get { return Name; }
         }
-        public void GetCardtoPrint()
+        public void DisplayeCardInHand()
         {
             string messagetoprint = "";
             foreach(Card card in CardInHand)
@@ -59,6 +59,11 @@ namespace cards.Player
                 }
             }
             return false;
+        }
+        public void MovetoFinalKittyHand(Card card)
+        {
+            Remove(card);
+            FinalKittyHand.Add(card);
         }
         public void Reset()
         {
@@ -100,12 +105,12 @@ namespace cards.Player
         }
         public void DeductBalance(double sum)
         {
-            balance = balance - sum;
-            if (balance > 0) { balance = 0; }
+            Balance = Balance - sum;
+            if (Balance > 0) { Balance = 0; }
         }
         public void AddBalance(double sum)
         {
-            balance = balance + sum;
+            Balance = Balance + sum;
         }
         public void RemoveAt(int index)
         {

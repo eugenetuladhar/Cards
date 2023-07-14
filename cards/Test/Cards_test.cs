@@ -44,7 +44,7 @@ namespace cards.Test
             Assert.IsTrue(c.TotalDeck.Count()==51);
             Assert.IsFalse(c.HaveCard(x));
 
-            c.AddCard(x);
+            c.AddCardOneDeck(x);
             Card y = new Card(c.TotalDeck[51].GetCardType(), c.TotalDeck[51].GetCardValue());
             Console.WriteLine("Top card is : ");
             Console.WriteLine(y.GetCardType());

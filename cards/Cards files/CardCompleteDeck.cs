@@ -74,7 +74,7 @@ namespace cards.Cards_files
             }
             return false;
         }
-        public void AddCard(Card card)
+        public void AddCardOneDeck(Card card)
         {
             if(TotalDeck.Count<=52 && !HaveCard(card))
             {
