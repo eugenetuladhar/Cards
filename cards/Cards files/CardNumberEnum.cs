@@ -62,6 +62,8 @@ namespace cards.Cards_files
             {
                 case 1:
                     return CardValue.Ace;
+                case 14:
+                    return CardValue.Ace;
                 case 2:
                     return CardValue.Two;
                 case 3:

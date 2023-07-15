@@ -31,9 +31,13 @@ namespace cards.Player
         {
             get { return Name; }
         }
-        public void DisplayeCardInHand()
+        public void DisplayeCardInHand(bool iskitty = false)
         {
             string messagetoprint = "";
+            if (iskitty)
+            {
+                CardInHand = FinalKittyHand;
+            }
             foreach(Card card in CardInHand)
             {
                 messagetoprint = messagetoprint+" *" + card.GetCardType() + card.GetCardValue() + "*";
