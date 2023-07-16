@@ -27,10 +27,70 @@ namespace cards.Utils
             //Deal 
             KittyDeal(playerlist, carddeck);
 
-            // start game
+            //Testcodes
+            //var b = playerlist[0].CardInHand;
+            //b.Clear();
+            //b.Add(new Card(CardType.Spade, CardValue.King));
+            //b.Add(new Card(CardType.Club, CardValue.Seven));
+            //b.Add(new Card(CardType.Spade, CardValue.Six));
+            //b.Add(new Card(CardType.Club, CardValue.Eight));
+            //b.Add(new Card(CardType.Diamond, CardValue.Three));
+            //b.Add(new Card(CardType.Club, CardValue.King));
+            //b.Add(new Card(CardType.Club, CardValue.Six));
+            //b.Add(new Card(CardType.Spade, CardValue.Nine));
+            //b.Add(new Card(CardType.Spade, CardValue.Three));
+            //var c = playerlist[1].CardInHand;
+            //c.Clear();
+            //c.Add(new Card(CardType.Diamond, CardValue.Eight));
+            //c.Add(new Card(CardType.Spade, CardValue.Eight));
+            //c.Add(new Card(CardType.Club, CardValue.Three));
+            //c.Add(new Card(CardType.Club, CardValue.Ace));
+            //c.Add(new Card(CardType.Diamond, CardValue.Seven));
+            //c.Add(new Card(CardType.Club, CardValue.Two));
+            //c.Add(new Card(CardType.Diamond, CardValue.Six));
+            //c.Add(new Card(CardType.Heart, CardValue.Nine));
+            //c.Add(new Card(CardType.Diamond, CardValue.Ace));
+            //var a = playerlist[2].CardInHand;
+            //a.Clear();
+            //a.Add(new Card(CardType.Heart, CardValue.Nine));
+            //a.Add(new Card(CardType.Club, CardValue.Eight));
+            //a.Add(new Card(CardType.Spade, CardValue.Seven));
+            //a.Add(new Card(CardType.Heart, CardValue.Queen));
+            //a.Add(new Card(CardType.Heart, CardValue.Jacks));
+            //a.Add(new Card(CardType.Heart, CardValue.Seven));
+            //a.Add(new Card(CardType.Club, CardValue.Two));
+            //a.Add(new Card(CardType.Spade, CardValue.Two));
+            //a.Add(new Card(CardType.Club, CardValue.Five));
+            //Cardlogiccs.ShowAllPlayersCard(playerlist);
+
+
+            //start game
             StartPlaying(playerlist);
 
-            //Cardlogiccs.ShowAllPlayersCard(playerlist, true);
+            //compare and choose winner
+            DetermineWinner(playerlist);
+
+            Cardlogiccs.ShowAllPlayersCard(playerlist);
+        }
+
+        private static void DetermineWinner(List<Player.Player> playerlist)
+        {
+            for (int i = 1; i < 4; i++)
+            {
+                int CurrentIndexWinner = 0;
+                for (int i = 1; i < playerlist.Count(); i++)
+                {
+                    if (i == 0)
+                    {
+                        continue;
+                    }
+                    CardCompareLogics.CompareTwoHands(playerlist[i], playerlist[CurrentIndexWinner]);
+                    if (playerlist[i].result == CardResult.WIN)
+                    {
+                        CurrentIndexWinner = i;
+                    }
+                }
+            }
         }
 
         private static void StartPlaying(List<Player.Player> playerlist)
@@ -74,7 +134,7 @@ namespace cards.Utils
                         HandleCommonCards(playerlist[i]);
                         playerlist[i].kittyStrength.Add(CardStrength.Common);
                     }
-                    Console.WriteLine($"Checking Hand {j} of all players completed.");
+                    //Console.WriteLine($"Checking Hand {j} of all players completed.");
                 }
             }
         }
@@ -117,7 +177,7 @@ namespace cards.Utils
             }
             p.cardsinInteger.Sort();
             // check same card types
-            for (int i = p.cardsinInteger.Count() - 1; i <= 0; i--)
+            for (int i = p.cardsinInteger.Count() - 1; i >= 0; i--)
             {
                 // converting int to card
                 CardValue cv = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i]);
@@ -126,7 +186,10 @@ namespace cards.Utils
                 {
                     if (colorMap.ContainsKey(card.GetCardType()))
                     {
-                        colorMap[card.GetCardType()].Add(card.GetCardValue());
+                        if (!colorMap[card.GetCardType()].Contains(card.GetCardValue()))// bad coding fix later, added for foundnewlist duplicate cards
+                        {
+                            colorMap[card.GetCardType()].Add(card.GetCardValue());
+                        }
 
                         if (colorMap[card.GetCardType()].Count() >= 3 &&
                             colorMap.TryGetValue(card.GetCardType(), out var values))
@@ -138,14 +201,17 @@ namespace cards.Utils
                                 { 
                                     p.MovetoFinalKittyHand(c1); 
                                 }
+                                else
+                                {
+                                    Console.WriteLine("error in color");
+                                }
                             }
                             return true;
                         }
                     }
                     else
                     {
-                        colorMap[card.GetCardType()] = new List<CardValue> { };
-
+                        colorMap.Add(card.GetCardType(), new List<CardValue> { card.GetCardValue() });
                     }
                 }
             }
@@ -154,6 +220,14 @@ namespace cards.Utils
 
         private static bool CheckRunCards(Player.Player p)
         {
+            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
+            {
+                if (p.cardsinInteger[j] == 14)
+                {
+                    p.cardsinInteger[j] = 1;
+                }
+            }
+            p.cardsinInteger.Sort();
             //check KQA
             if (p.cardsinInteger.Contains(1) && p.cardsinInteger.Contains(12)
                 && p.cardsinInteger.Contains(13))
@@ -200,9 +274,9 @@ namespace cards.Utils
                 if (p.cardsinInteger[i - 1] == p.cardsinInteger[i] - 1 &&
                             p.cardsinInteger[i + 1] == p.cardsinInteger[i] + 1)
                 {
-                    CardValue cv1 = CardConversion.ConversionIntegertoValue(i - 1);
-                    CardValue cv2 = CardConversion.ConversionIntegertoValue(i);
-                    CardValue cv3 = CardConversion.ConversionIntegertoValue(i + 1);
+                    CardValue cv1 = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i - 1]);
+                    CardValue cv2 = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i]);
+                    CardValue cv3 = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i + 1]);
                     // get card
                     Card? c1 = p.CardInHand.Find(c => c.GetCardValue() == cv1);
                     Card? c2 = p.CardInHand.Find(c => c.GetCardValue() == cv2);
@@ -226,6 +300,14 @@ namespace cards.Utils
 
         private static bool CheckColorRunCards(Player.Player p)
         {
+            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
+            {
+                if (p.cardsinInteger[j] == 14)
+                {
+                    p.cardsinInteger[j] = 1;
+                }
+            }
+            p.cardsinInteger.Sort();
             Dictionary<CardType, List<CardValue>> colorMap = new Dictionary<CardType, List<CardValue>>();
             // fill dictionary as per each card type
             foreach (var card in p.CardInHand)
@@ -236,7 +318,7 @@ namespace cards.Utils
                 }
                 else
                 {
-                    colorMap[card.GetCardType()]=new List<CardValue>{ };
+                    colorMap.Add(card.GetCardType(),new List<CardValue> { card.GetCardValue() });
                 }
             }
             // find run in each card type
@@ -306,9 +388,9 @@ namespace cards.Utils
                         if (cardlistint[i - 1] == cardlistint[i] - 1 &&
                             cardlistint[i + 1] == cardlistint[i] + 1)
                         {
-                            CardValue cv1 = CardConversion.ConversionIntegertoValue(i - 1);
-                            CardValue cv2 = CardConversion.ConversionIntegertoValue(i);
-                            CardValue cv3 = CardConversion.ConversionIntegertoValue(i + 1);
+                            CardValue cv1 = CardConversion.ConversionIntegertoValue(cardlistint[i - 1]);
+                            CardValue cv2 = CardConversion.ConversionIntegertoValue(cardlistint[i]);
+                            CardValue cv3 = CardConversion.ConversionIntegertoValue(cardlistint[i + 1]);
                             // get card
                             Card? c1 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
                             c.GetCardValue() == cv1);
@@ -348,7 +430,7 @@ namespace cards.Utils
             p.cardsinInteger.Sort();
 
             // check same card types
-            for (int i = p.cardsinInteger.Count() - 1; i <= 0; i--)
+            for (int i = p.cardsinInteger.Count() - 1; i >= 0; i--)
             {
                 // converting int to card
                 CardValue cv = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i]);
@@ -359,6 +441,10 @@ namespace cards.Utils
                     foreach (var singlecard in foundcardlist)
                     {
                         p.MovetoFinalKittyHand(singlecard);
+                    }
+                    if(num==2)
+                    {
+                        p.MovetoFinalKittyHand(p.CardInHand[0]);
                     }
                     return true;
                 }

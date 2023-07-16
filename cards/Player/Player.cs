@@ -11,15 +11,14 @@ namespace cards.Player
     {
         private string Name = "Default Name";
         public List<Card> CardInHand = new List<Card>();
-
-        public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
-        public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
-        
         public CardStrength strength = new CardStrength();
-
         public CardResult result = new CardResult();
         public List<int> cardsinInteger = new List<int>();
         public double Balance = new double();
+
+        public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
+        public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
+        public List<CardResult> Kittyresult = new List<CardResult>();//for kitty
         public Player(string name,double bal=0)
         {
             Name = name;
@@ -34,7 +33,7 @@ namespace cards.Player
         public void DisplayeCardInHand(bool iskitty = false)
         {
             string messagetoprint = "";
-            if (iskitty)
+            if (iskitty && FinalKittyHand.Any())
             {
                 CardInHand = FinalKittyHand;
             }
