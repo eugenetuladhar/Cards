@@ -11,6 +11,7 @@ namespace cards.Utils
 {
     public class KittyLogic
     {
+        private static Dictionary< int,Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
         public static void RunKitty()
         {
             Cardlogiccs.CurrentGame = GameType.KITTY;
@@ -74,22 +75,91 @@ namespace cards.Utils
         }
 
         private static void DetermineWinner(List<Player.Player> playerlist)
-        {
-            for (int i = 1; i < 4; i++)
+        { 
+            for (int round = 0; round < 3; round++)
             {
                 int CurrentIndexWinner = 0;
-                for (int i = 1; i < playerlist.Count(); i++)
+                for (int i = 0; i < playerlist.Count(); i++)
                 {
+                    for (int j = 0; j < playerlist[i].cardsinInteger.Count(); j++)//Ace to 14 value
+                    {
+                        if (playerlist[i].cardsinInteger[j] == 1)
+                        {
+                            playerlist[i].cardsinInteger[j] = 14;
+                        }
+                    }
                     if (i == 0)
                     {
                         continue;
                     }
+                    //reuse flash logic code adjusting value
+                    CardCompareLogics.ResetWinnerlist();
+                    playerlist[i].strength = playerlist[i].kittyStrength[round];
+                    for (int k = 0; k < 3; k++)
+                    {
+                        playerlist[i].CardInHand[k] = playerlist[i].FinalKittyHand[k*(round*3)];
+                        playerlist[i].cardsinInteger[k] = CardConversion.ConversionValuetoInteger(playerlist[i].CardInHand[k].GetCardValue());
+                    }
+
                     CardCompareLogics.CompareTwoHands(playerlist[i], playerlist[CurrentIndexWinner]);
                     if (playerlist[i].result == CardResult.WIN)
                     {
                         CurrentIndexWinner = i;
                     }
                 }
+                //adding value in kittystrength every round
+                var roundwinnerlist = CardCompareLogics.GetWinnerlist();
+                Console.WriteLine($"** Round {round + 1} Result **");
+                Cardlogiccs.ShowAllPlayersCard(playerlist);
+
+                if (roundwinnerlist.Count()>1)
+                {
+                    //all draw
+                    AssignAllPlayerkittyStrength(CardResult.DRAW, round, playerlist);
+                    Console.WriteLine("DRAW");
+                }
+                else
+                {
+                    //assign round winner
+                    AssignAllPlayerkittyStrength(CardResult.LOSE, round, playerlist);
+                    foreach (var roundwinner in roundwinnerlist)
+                    {
+                        roundwinner.Kittyresult[round] = CardResult.WIN;
+                        Console.WriteLine($"** Winner {roundwinner.GetName} by {roundwinner.kittyStrength[round]} **");
+                        AllRoundWinners[round + 1] = roundwinner;
+                    }
+                }
+            }
+            GetKittyResult(playerlist);
+        }
+
+        private static void GetKittyResult(List<Player.Player> playerlist)
+        {
+            if (AllRoundWinners.Keys.Contains(1)&& AllRoundWinners.Keys.Contains(2))
+            {
+                if (AllRoundWinners[1] == AllRoundWinners[2])
+                {
+                    Console.WriteLine($" *** The WInner of this game is {AllRoundWinners[1].GetName} *** ");
+                }
+            }
+            else if (AllRoundWinners.Keys.Contains(3) && AllRoundWinners.Keys.Contains(2))
+            {
+                if (AllRoundWinners[3] == AllRoundWinners[2])
+                {
+                    Console.WriteLine($" *** The WInner of this game is {AllRoundWinners[3].GetName} *** ");
+                }
+            }
+            else
+            {
+                Console.WriteLine($" *** The Game has endded in KITTY *** ");
+            }
+        }
+
+        private static void AssignAllPlayerkittyStrength(CardResult result, int round, List<Player.Player> playerlist)
+        {
+            foreach (var p in playerlist)
+            {
+                p.Kittyresult[round] = result;
             }
         }
 

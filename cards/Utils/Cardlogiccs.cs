@@ -84,7 +84,7 @@ namespace cards.Utils
                 {
                     Console.WriteLine($" {player.GetName} {hashave} :");
                 }
-                player.DisplayeCardInHand(CurrentGame==GameType.KITTY);
+                player.DisplayeCardInHand();
             }
 
         }

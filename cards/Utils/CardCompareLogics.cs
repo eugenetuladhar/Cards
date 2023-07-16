@@ -15,6 +15,10 @@ namespace cards.Utils
         {
             return Winnerlist;
         }
+        public static void ResetWinnerlist()
+        {
+            Winnerlist.Clear();
+        }
         public static void CompareTwoHands(Player.Player player1, Player.Player player2)
         {
             if (CompareTrial(player1, player2)) { }

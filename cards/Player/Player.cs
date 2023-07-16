@@ -30,13 +30,13 @@ namespace cards.Player
         {
             get { return Name; }
         }
-        public void DisplayeCardInHand(bool iskitty = false)
+        public void DisplayeCardInHand()
         {
             string messagetoprint = "";
-            if (iskitty && FinalKittyHand.Any())
-            {
-                CardInHand = FinalKittyHand;
-            }
+            //if (iskitty && FinalKittyHand.Any())
+            //{
+            //    CardInHand = FinalKittyHand;
+            //}
             foreach(Card card in CardInHand)
             {
                 messagetoprint = messagetoprint+" *" + card.GetCardType() + card.GetCardValue() + "*";
