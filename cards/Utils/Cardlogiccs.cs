@@ -10,7 +10,7 @@ namespace cards.Utils
 {
     public static class Cardlogiccs
     {
-        public static GameType CurrentGame { get; set; }
+        public static CardGameType CurrentGame { get; set; }
         public static void Deal(List<Player.Player> list, CardCompleteDeck c, int numberofcardstodeal,bool reveal = true)
         {
             Console.WriteLine("*** Dealing cards ***");
@@ -52,11 +52,11 @@ namespace cards.Utils
 
         private static int GetMaxNumPlayers()
         {
-            if (CurrentGame == GameType.FLASH)
+            if (CurrentGame == CardGameType.FLASH)
             {
                 return 10;
             }
-            else if (CurrentGame == GameType.KITTY)
+            else if (CurrentGame == CardGameType.KITTY)
             {
                 return 5;
             }
@@ -76,15 +76,10 @@ namespace cards.Utils
                     hashave = "have";
                 }
 
-                if (CurrentGame == GameType.FLASH)
-                {
-                    Console.WriteLine($" {player.GetName} {hashave} {player.strength} :");
-                }
-                else
-                {
-                    Console.WriteLine($" {player.GetName} {hashave} :");
-                }
+                Console.WriteLine($"    {player.GetName} {hashave} {player.strength} :");
+                
                 player.DisplayeCardInHand();
+                Console.WriteLine();
             }
 
         }

@@ -17,8 +17,8 @@ while (mainmenu)
     Console.WriteLine(" Which game to play ?");
     Console.WriteLine(" 1 . Flash");
     Console.WriteLine(" 2 . Kitty (Under Construction)");
-        Console.WriteLine(" 0 . Exit");
-        value = Console.ReadLine();
+    Console.WriteLine(" 0 . Exit");
+    value = Console.ReadLine();
     }
     switch (value)
     {
@@ -28,6 +28,7 @@ while (mainmenu)
             FlashLogic.RunFlash();
             Console.WriteLine("** PLAY AGAIN? (y/n) **");
             playagain = Console.ReadLine();
+            Console.Clear();
             break;
         case "2":
             Console.Clear();
@@ -35,6 +36,7 @@ while (mainmenu)
             KittyLogic.RunKitty();
             Console.WriteLine("** PLAY AGAIN? (y/n) **");
             playagain = Console.ReadLine();
+            Console.Clear();
             break;
         case "0":
             Console.WriteLine("** Exit **");

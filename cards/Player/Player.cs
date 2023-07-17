@@ -19,6 +19,7 @@ namespace cards.Player
         public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
         public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
         public List<CardResult> Kittyresult = new List<CardResult>();//for kitty
+        public bool TurnONOFFpickthrowMessage = false;
         public Player(string name,double bal=0)
         {
             Name = name;
@@ -47,7 +48,10 @@ namespace cards.Player
         public void PickCard(Card card,bool reveal=true)
         {
             this.CardInHand.Add(card);
-            ShowPickThrowMessage(card, true,reveal);
+            if (TurnONOFFpickthrowMessage)
+            {
+                ShowPickThrowMessage(card, true, reveal);
+            }
         }
         public bool ThrowCard(Card card,bool reveal= true)
         {
@@ -57,7 +61,10 @@ namespace cards.Player
                     card.GetCardValue() == CardInHand[i].GetCardValue())
                 {
                     CardInHand.RemoveAt(i);
-                    ShowPickThrowMessage(card, false,reveal);
+                    if (TurnONOFFpickthrowMessage)
+                    {
+                        ShowPickThrowMessage(card, false, reveal);
+                    }
                     return true;
                 }
             }

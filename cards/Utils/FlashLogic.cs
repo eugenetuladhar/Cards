@@ -18,7 +18,7 @@ namespace cards.Utils
         
         public static void RunFlash() 
         {
-            Cardlogiccs.CurrentGame = GameType.FLASH;
+            Cardlogiccs.CurrentGame = CardGameType.FLASH;
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
             Console.WriteLine("*** New Card deck created ***");

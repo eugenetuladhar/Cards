@@ -14,7 +14,7 @@ namespace cards.Utils
         private static Dictionary< int,Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
         public static void RunKitty()
         {
-            Cardlogiccs.CurrentGame = GameType.KITTY;
+            Cardlogiccs.CurrentGame = CardGameType.KITTY;
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
             Console.WriteLine("*** New Card deck created ***");
@@ -71,7 +71,8 @@ namespace cards.Utils
             //compare and choose winner
             DetermineWinner(playerlist);
 
-            Cardlogiccs.ShowAllPlayersCard(playerlist);
+            Console.ReadLine();
+            Console.Clear();
         }
 
         private static void DetermineWinner(List<Player.Player> playerlist)
@@ -88,19 +89,20 @@ namespace cards.Utils
                             playerlist[i].cardsinInteger[j] = 14;
                         }
                     }
+                    //reuse flash logic code adjusting value
+                    CardCompareLogics.ResetWinnerlist();
+                    playerlist[i].strength = playerlist[i].kittyStrength[round];
+                    playerlist[i].cardsinInteger.Clear();
+                    playerlist[i].CardInHand.Clear();
+                    for (int k = 0; k < 3; k++)
+                    {
+                        playerlist[i].CardInHand.Add(playerlist[i].FinalKittyHand[k+(round*3)]);
+                        playerlist[i].cardsinInteger.Add(CardConversion.ConversionValuetoInteger(playerlist[i].CardInHand[k].GetCardValue()));
+                    }
                     if (i == 0)
                     {
                         continue;
                     }
-                    //reuse flash logic code adjusting value
-                    CardCompareLogics.ResetWinnerlist();
-                    playerlist[i].strength = playerlist[i].kittyStrength[round];
-                    for (int k = 0; k < 3; k++)
-                    {
-                        playerlist[i].CardInHand[k] = playerlist[i].FinalKittyHand[k*(round*3)];
-                        playerlist[i].cardsinInteger[k] = CardConversion.ConversionValuetoInteger(playerlist[i].CardInHand[k].GetCardValue());
-                    }
-
                     CardCompareLogics.CompareTwoHands(playerlist[i], playerlist[CurrentIndexWinner]);
                     if (playerlist[i].result == CardResult.WIN)
                     {
@@ -109,14 +111,15 @@ namespace cards.Utils
                 }
                 //adding value in kittystrength every round
                 var roundwinnerlist = CardCompareLogics.GetWinnerlist();
-                Console.WriteLine($"** Round {round + 1} Result **");
+                Console.WriteLine($"*********************** Round {round + 1} ***********************");
                 Cardlogiccs.ShowAllPlayersCard(playerlist);
 
                 if (roundwinnerlist.Count()>1)
                 {
                     //all draw
                     AssignAllPlayerkittyStrength(CardResult.DRAW, round, playerlist);
-                    Console.WriteLine("DRAW");
+                    Console.WriteLine($"******  Round {round + 1} has ended as DRAW ******");
+                    Console.WriteLine();
                 }
                 else
                 {
@@ -125,33 +128,32 @@ namespace cards.Utils
                     foreach (var roundwinner in roundwinnerlist)
                     {
                         roundwinner.Kittyresult[round] = CardResult.WIN;
-                        Console.WriteLine($"** Winner {roundwinner.GetName} by {roundwinner.kittyStrength[round]} **");
+                        Console.WriteLine($"****** Winner of Round {round+1} is {roundwinner.GetName} by {roundwinner.kittyStrength[round]} ******");
+                        Console.WriteLine();
                         AllRoundWinners[round + 1] = roundwinner;
                     }
                 }
+                Console.ReadLine();
             }
             GetKittyResult(playerlist);
         }
 
         private static void GetKittyResult(List<Player.Player> playerlist)
         {
-            if (AllRoundWinners.Keys.Contains(1)&& AllRoundWinners.Keys.Contains(2))
+            if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners.Keys.Contains(3) && AllRoundWinners[1] == AllRoundWinners[2] && AllRoundWinners[2]==AllRoundWinners[3])
             {
-                if (AllRoundWinners[1] == AllRoundWinners[2])
-                {
-                    Console.WriteLine($" *** The WInner of this game is {AllRoundWinners[1].GetName} *** ");
-                }
+                Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} with SALAM!! ******* ");
+            }else if (AllRoundWinners.Keys.Contains(1)&& AllRoundWinners.Keys.Contains(2) && AllRoundWinners[1] == AllRoundWinners[2])
+            {
+                    Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} ******* ");
             }
-            else if (AllRoundWinners.Keys.Contains(3) && AllRoundWinners.Keys.Contains(2))
+            else if (AllRoundWinners.Keys.Contains(3) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners[3] == AllRoundWinners[2])
             {
-                if (AllRoundWinners[3] == AllRoundWinners[2])
-                {
-                    Console.WriteLine($" *** The WInner of this game is {AllRoundWinners[3].GetName} *** ");
-                }
+                    Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[3].GetName} ******* ");
             }
             else
             {
-                Console.WriteLine($" *** The Game has endded in KITTY *** ");
+                Console.WriteLine($" *** The Game has ended in KITTY *** ");
             }
         }
 
@@ -159,7 +161,7 @@ namespace cards.Utils
         {
             foreach (var p in playerlist)
             {
-                p.Kittyresult[round] = result;
+                p.Kittyresult.Add(result);
             }
         }
 

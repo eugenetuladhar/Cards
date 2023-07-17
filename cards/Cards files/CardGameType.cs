@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace cards.Cards_files
 {
-    public enum GameType
+    public enum CardGameType
     {
         FLASH,
         KITTY,
