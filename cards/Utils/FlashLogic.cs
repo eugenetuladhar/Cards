@@ -31,8 +31,24 @@ namespace cards.Utils
 
             //Deal 
             FlashLogic.FlashDeal(playerlist, carddeck);
-            Console.ReadLine();
 
+            //testcode
+            //playerlist[0].CardInHand.Clear();
+            //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Ten));
+            //playerlist[0].CardInHand.Add(new Card(CardType.Club, CardValue.Jacks));
+            //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
+            //playerlist[1].CardInHand.Clear();
+            //playerlist[1].CardInHand.Add(new Card(CardType.Diamond, CardValue.Ace));
+            //playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Queen));
+            //playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.King));
+            //playerlist[2].CardInHand.Clear();
+            //playerlist[2].CardInHand.Add(new Card(CardType.Club, CardValue.Four));
+            //playerlist[2].CardInHand.Add(new Card(CardType.Diamond, CardValue.Five));
+            //playerlist[2].CardInHand.Add(new Card(CardType.Club, CardValue.Six));
+            //playerlist[3].CardInHand.Clear();
+            //playerlist[3].CardInHand.Add(new Card(CardType.Spade, CardValue.Ace));
+            //playerlist[3].CardInHand.Add(new Card(CardType.Spade, CardValue.King));
+            //playerlist[3].CardInHand.Add(new Card(CardType.Spade, CardValue.Nine));
             // Game Logic 
             FlashLogic.DetermineWinner(playerlist);
             Console.WriteLine("** Calculating Winner........ **");
@@ -52,36 +68,8 @@ namespace cards.Utils
         {
             foreach (var p in list)
             {
-                p.cardsinInteger = Cardlogiccs.GetCardIntegerValue(p.CardInHand);
-                if (CheckTrial(p.CardInHand))
-                {
-                    p.strength = CardStrength.Trial;
-                }
-                else if(CheckColor(p.CardInHand) && CheckRun(p.CardInHand))
-                {
-                    p.strength = CardStrength.ColorSequence;
-                    p.cardsinInteger.Sort();
-                }
-                else if(CheckRun(p.CardInHand))
-                {
-                    p.strength = CardStrength.Sequence;
-                    p.cardsinInteger.Sort();
-                }
-                else if (CheckColor(p.CardInHand))
-                {
-                    p.strength = CardStrength.Color;
-                    p.cardsinInteger.Sort();
-                }
-                else if (CheckJoot(p.CardInHand))
-                {
-                    p.strength = CardStrength.Double;
-                    p.cardsinInteger.Sort();
-                }
-                else
-                {
-                    p.strength = CardStrength.Common;
-                    p.cardsinInteger.Sort();
-                }
+                CardStrengthLogic.InsertStrengthThreeCards(p);
+                
             }
             Cardlogiccs.ShowAllPlayersCard(list);
 
@@ -113,60 +101,6 @@ namespace cards.Utils
                     CurrentIndexWinner = i; 
                 }
             }
-        }
-
-        public static bool CheckTrial(List<Card> cardInHand)
-        {
-            if (cardInHand[0].GetCardValue() == cardInHand[1].GetCardValue() &&
-                cardInHand[0].GetCardValue() == cardInHand[2].GetCardValue())
-            {
-
-                return true;    
-            }
-            return false;
-        }
-        public static bool CheckColor(List<Card> cardInHand)
-        {
-            if (cardInHand[0].GetCardType() == cardInHand[1].GetCardType() &&
-                cardInHand[0].GetCardType() == cardInHand[2].GetCardType())
-            {
-
-                return true;
-            }
-            return false;
-        }
-        public static bool CheckJoot(List<Card> cardInHand)
-        {
-            if(CheckTrial(cardInHand)) 
-            { 
-                return false; 
-            }
-            if (cardInHand[0].GetCardValue() == cardInHand[1].GetCardValue() ||
-                cardInHand[0].GetCardValue() == cardInHand[2].GetCardValue() ||
-                cardInHand[1].GetCardValue() == cardInHand[2].GetCardValue())
-            {
-
-                return true;
-            }
-            return false;
-        }
-        public static bool CheckRun(List<Card> cardInHand)
-        {
-            if (CheckTrial(cardInHand) || CheckJoot(cardInHand))
-            {
-                return false;
-            }
-            List<int> cardvalue = Cardlogiccs.GetCardIntegerValue(cardInHand);
-            cardvalue.Sort();
-            if (cardvalue[0] == cardvalue[1]-1 && cardvalue[2] == cardvalue[1] + 1)
-            {
-                return true;
-            }
-            if (cardvalue[0] == 1 && cardvalue[1]==12 && cardvalue[2] == 13)
-            {
-                return true;
-            }
-            return false; 
         }
     }
 }

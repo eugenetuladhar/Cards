@@ -29,7 +29,7 @@ namespace cards.Utils
             int numofplayers = 0;
             while (true)
             {
-                Console.WriteLine($" Enter number of players (Min = 2 , Max = {maxnum}) :");
+                Console.Write($" Enter number of players (Min = 2 , Max = {maxnum}) : ");
                 try
                 {
                     numofplayers = int.Parse(Console.ReadLine());
@@ -103,6 +103,13 @@ namespace cards.Utils
                 listvalue.Add(CardConversion.ConversionValuetoInteger(value));
             }
             return listvalue;
+        }
+        public static List<Card> SwapPositionofCards(List<Card> cardlist,int from,int to) 
+        {
+            Card temp = cardlist[from];
+            cardlist[from] = cardlist[to];
+            cardlist[to] = temp;
+            return cardlist;
         }
     }
 }

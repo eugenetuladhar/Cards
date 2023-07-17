@@ -31,37 +31,43 @@ namespace cards.Utils
             //Testcodes
             //var b = playerlist[0].CardInHand;
             //b.Clear();
-            //b.Add(new Card(CardType.Spade, CardValue.King));
-            //b.Add(new Card(CardType.Club, CardValue.Seven));
-            //b.Add(new Card(CardType.Spade, CardValue.Six));
-            //b.Add(new Card(CardType.Club, CardValue.Eight));
-            //b.Add(new Card(CardType.Diamond, CardValue.Three));
-            //b.Add(new Card(CardType.Club, CardValue.King));
-            //b.Add(new Card(CardType.Club, CardValue.Six));
-            //b.Add(new Card(CardType.Spade, CardValue.Nine));
-            //b.Add(new Card(CardType.Spade, CardValue.Three));
+            //b.Add(new Card(CardType.Heart, CardValue.King));
+            //b.Add(new Card(CardType.Heart, CardValue.Queen));
+            //b.Add(new Card(CardType.Heart, CardValue.Jacks));
+            //b.Add(new Card(CardType.Heart, CardValue.Seven));
+            //b.Add(new Card(CardType.Heart, CardValue.Six));
+            //b.Add(new Card(CardType.Heart, CardValue.Five));
+            //b.Add(new Card(CardType.Diamond, CardValue.Ten));
+            //b.Add(new Card(CardType.Club, CardValue.Jacks));
+            //b.Add(new Card(CardType.Diamond, CardValue.Queen));
+            //playerlist[0].DisplayeCardInHand();
+            //b = Cardlogiccs.SwapPositionofCards(b, 0, 1);
+            //playerlist[0].DisplayeCardInHand();
+            //b = Cardlogiccs.SwapPositionofCards(b, 3, 6);
+            //playerlist[0].DisplayeCardInHand();
+
             //var c = playerlist[1].CardInHand;
             //c.Clear();
-            //c.Add(new Card(CardType.Diamond, CardValue.Eight));
+            //c.Add(new Card(CardType.Spade, CardValue.Jacks));
+            //c.Add(new Card(CardType.Spade, CardValue.Nine));
+            //c.Add(new Card(CardType.Spade, CardValue.Ten));
             //c.Add(new Card(CardType.Spade, CardValue.Eight));
-            //c.Add(new Card(CardType.Club, CardValue.Three));
-            //c.Add(new Card(CardType.Club, CardValue.Ace));
-            //c.Add(new Card(CardType.Diamond, CardValue.Seven));
-            //c.Add(new Card(CardType.Club, CardValue.Two));
-            //c.Add(new Card(CardType.Diamond, CardValue.Six));
-            //c.Add(new Card(CardType.Heart, CardValue.Nine));
+            //c.Add(new Card(CardType.Spade, CardValue.Seven));
+            //c.Add(new Card(CardType.Spade, CardValue.Six));
             //c.Add(new Card(CardType.Diamond, CardValue.Ace));
+            //c.Add(new Card(CardType.Club, CardValue.Queen));
+            //c.Add(new Card(CardType.Club, CardValue.King));
             //var a = playerlist[2].CardInHand;
             //a.Clear();
             //a.Add(new Card(CardType.Heart, CardValue.Nine));
             //a.Add(new Card(CardType.Club, CardValue.Eight));
             //a.Add(new Card(CardType.Spade, CardValue.Seven));
-            //a.Add(new Card(CardType.Heart, CardValue.Queen));
+            //a.Add(new Card(CardType.Diamond, CardValue.Two));
             //a.Add(new Card(CardType.Heart, CardValue.Jacks));
-            //a.Add(new Card(CardType.Heart, CardValue.Seven));
+            //a.Add(new Card(CardType.Heart, CardValue.Two));
             //a.Add(new Card(CardType.Club, CardValue.Two));
             //a.Add(new Card(CardType.Spade, CardValue.Two));
-            //a.Add(new Card(CardType.Club, CardValue.Five));
+            //a.Add(new Card(CardType.Club, CardValue.Nine));
             //Cardlogiccs.ShowAllPlayersCard(playerlist);
 
 
@@ -82,13 +88,7 @@ namespace cards.Utils
                 int CurrentIndexWinner = 0;
                 for (int i = 0; i < playerlist.Count(); i++)
                 {
-                    for (int j = 0; j < playerlist[i].cardsinInteger.Count(); j++)//Ace to 14 value
-                    {
-                        if (playerlist[i].cardsinInteger[j] == 1)
-                        {
-                            playerlist[i].cardsinInteger[j] = 14;
-                        }
-                    }
+                    
                     //reuse flash logic code adjusting value
                     CardCompareLogics.ResetWinnerlist();
                     playerlist[i].strength = playerlist[i].kittyStrength[round];
@@ -99,7 +99,14 @@ namespace cards.Utils
                         playerlist[i].CardInHand.Add(playerlist[i].FinalKittyHand[k+(round*3)]);
                         playerlist[i].cardsinInteger.Add(CardConversion.ConversionValuetoInteger(playerlist[i].CardInHand[k].GetCardValue()));
                     }
-                    if (i == 0)
+                    for (int j = 0; j < playerlist[i].cardsinInteger.Count(); j++)//Ace to 14 value
+                    {
+                        if (playerlist[i].cardsinInteger[j] == 1)
+                        {
+                            playerlist[i].cardsinInteger[j] = 14;
+                        }
+                    }
+                    if (i == 0 || playerlist[i].kittyStrength.Contains(CardStrength.Quad))
                     {
                         continue;
                     }
@@ -108,6 +115,11 @@ namespace cards.Utils
                     {
                         CurrentIndexWinner = i;
                     }
+                }
+                //quad logic
+                if (HaveQuadCards(playerlist))
+                {
+                    break;
                 }
                 //adding value in kittystrength every round
                 var roundwinnerlist = CardCompareLogics.GetWinnerlist();
@@ -138,18 +150,49 @@ namespace cards.Utils
             GetKittyResult(playerlist);
         }
 
+        private static bool HaveQuadCards(List<Player.Player> playerlist)
+        {
+            bool returnvalue = false;
+            int index = 1;
+            foreach (var p in playerlist)
+            {
+                if (p.kittyStrength.Contains(CardStrength.Quad))
+                {
+                    AllRoundWinners[index] =p;
+                    index=index+1;
+                    returnvalue= true;
+                }
+            }
+            return returnvalue;
+        }
+
         private static void GetKittyResult(List<Player.Player> playerlist)
         {
-            if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners.Keys.Contains(3) && AllRoundWinners[1] == AllRoundWinners[2] && AllRoundWinners[2]==AllRoundWinners[3])
+            if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners[1].kittyStrength.Contains(CardStrength.Quad))
+            {
+                string quadwinner=AllRoundWinners[1].GetName;
+                int highestquadvalue = CardConversion.ConversionValuetoInteger(AllRoundWinners[1].FinalKittyHand[0].GetCardValue(),true);
+                foreach (var item in AllRoundWinners)
+                {
+                    if (highestquadvalue < CardConversion.ConversionValuetoInteger(item.Value.FinalKittyHand[0].GetCardValue(),true))
+                    {
+                        highestquadvalue = CardConversion.ConversionValuetoInteger(item.Value.FinalKittyHand[0].GetCardValue(), true);
+                        quadwinner = item.Value.GetName;
+                    }
+                }
+                Console.WriteLine($" ******* The Winner of this game is {quadwinner} with Quads!! ******* ");
+            }
+            else if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners.Keys.Contains(3) && AllRoundWinners[1] == AllRoundWinners[2] && AllRoundWinners[2] == AllRoundWinners[3])
             {
                 Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} with SALAM!! ******* ");
-            }else if (AllRoundWinners.Keys.Contains(1)&& AllRoundWinners.Keys.Contains(2) && AllRoundWinners[1] == AllRoundWinners[2])
+            }
+            else if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners[1] == AllRoundWinners[2])
             {
-                    Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} ******* ");
+                Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} ******* ");
             }
             else if (AllRoundWinners.Keys.Contains(3) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners[3] == AllRoundWinners[2])
             {
-                    Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[3].GetName} ******* ");
+                Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[3].GetName} ******* ");
             }
             else
             {
@@ -168,9 +211,10 @@ namespace cards.Utils
         private static void StartPlaying(List<Player.Player> playerlist)
         {
             //human player
+            HumanPlayerLogic(playerlist[0]);
 
             // comp player
-            for (int i = 0; i < playerlist.Count(); i++)
+            for (int i = 1; i < playerlist.Count(); i++)
             {
                 for (int j = 1; j < 4; j++)
                 {
@@ -208,6 +252,76 @@ namespace cards.Utils
                     }
                     //Console.WriteLine($"Checking Hand {j} of all players completed.");
                 }
+            }
+        }
+
+        private static void HumanPlayerLogic(Player.Player HumanPlayer)
+        {
+            bool finalform = false;
+            string value = "";
+            while (!finalform)
+            {
+                Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Fill From and To to SWAP Position OR Press X to confirm Final form)");
+                Console.WriteLine();
+                HumanPlayer.DisplayeCardInHand();
+                Console.WriteLine("Pos : 1          2           3           4           5           6           7           8           9");
+                int fromvalue, tovalue;
+                Console.Write(" Swap cards From : ");
+                value = Console.ReadLine();
+                if (value == "X" || value == "x")
+                {
+                    finalform = true;
+                }
+                else if (checkInputRange(value))
+                {
+                    fromvalue = int.Parse(value);
+                    bool tovaluecheck = false;
+                    while (!tovaluecheck)
+                    {
+                        Console.Write(" Swap cards To : ");
+                        value = Console.ReadLine();
+                        if (value == "X" || value == "x")
+                        {
+                            finalform = true;
+                            tovaluecheck = true;
+                        }
+                        else if (checkInputRange(value))
+                        {
+                            tovalue = int.Parse(value);
+                            HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, fromvalue - 1, tovalue - 1);
+                            Console.WriteLine("Swap Completed");
+                            tovaluecheck = true;
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid To value!! Try Again!!");
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input! Try Again!");
+                }
+
+                Console.ReadLine();
+                Console.Clear();
+            }
+            Console.WriteLine("Cards Confirmed!");
+            //after confirm fill kitty strength
+            foreach (var item in HumanPlayer.CardInHand)
+            {
+                HumanPlayer.FinalKittyHand.Add(item);
+
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                HumanPlayer.CardInHand.Clear();
+                for (int j = 0; j < 3; j++)
+                {
+                    HumanPlayer.CardInHand.Add( HumanPlayer.FinalKittyHand[j + (i * 3)]);
+                }
+                CardStrengthLogic.InsertStrengthThreeCards(HumanPlayer);
+                HumanPlayer.kittyStrength.Add(HumanPlayer.strength);
             }
         }
 
@@ -553,6 +667,10 @@ namespace cards.Utils
         {
             int numberofcardstodeal = 9;
             Cardlogiccs.Deal(list, c, numberofcardstodeal, false);
+        }
+        private static bool checkInputRange(string value)
+        {
+            return value == "1" || value == "2" || value == "3" || value == "4" || value == "5" || value == "6" || value == "7" || value == "8" || value == "9";
         }
     }
 }

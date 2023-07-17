@@ -23,11 +23,15 @@ namespace cards.Cards_files
      }
     public static class CardConversion
     {
-        public static int ConversionValuetoInteger(CardValue item)
+        public static int ConversionValuetoInteger(CardValue item,bool greateracevalue = false)
         {
             switch (item)
             {
                 case CardValue.Ace:
+                    if(greateracevalue)
+                    {
+                        return 14;
+                    }
                     return 1;
                 case CardValue.Two:
                     return 2;
