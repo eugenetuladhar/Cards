@@ -9,7 +9,7 @@ namespace cards.Utils
 {
     public class CardStrengthLogic
     {
-        public static void InsertStrengthThreeCards(Player.Player p)
+        public static void GetCardStrengthThreeCards(Player.Player p)
         {
             p.cardsinInteger = Cardlogiccs.GetCardIntegerValue(p.CardInHand);
             if (CheckTrial(p.CardInHand))

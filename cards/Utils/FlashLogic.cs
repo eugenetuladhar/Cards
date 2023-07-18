@@ -33,14 +33,14 @@ namespace cards.Utils
             FlashLogic.FlashDeal(playerlist, carddeck);
 
             //testcode
-            //playerlist[0].CardInHand.Clear();
-            //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Ten));
-            //playerlist[0].CardInHand.Add(new Card(CardType.Club, CardValue.Jacks));
-            //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
-            //playerlist[1].CardInHand.Clear();
-            //playerlist[1].CardInHand.Add(new Card(CardType.Diamond, CardValue.Ace));
-            //playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Queen));
-            //playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.King));
+            playerlist[0].CardInHand.Clear();
+            playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
+            playerlist[0].CardInHand.Add(new Card(CardType.Heart, CardValue.Six));
+            playerlist[0].CardInHand.Add(new Card(CardType.Spade, CardValue.Four));
+            playerlist[1].CardInHand.Clear();
+            playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Four));
+            playerlist[1].CardInHand.Add(new Card(CardType.Diamond, CardValue.King));
+            playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Ten));
             //playerlist[2].CardInHand.Clear();
             //playerlist[2].CardInHand.Add(new Card(CardType.Club, CardValue.Four));
             //playerlist[2].CardInHand.Add(new Card(CardType.Diamond, CardValue.Five));
@@ -68,7 +68,7 @@ namespace cards.Utils
         {
             foreach (var p in list)
             {
-                CardStrengthLogic.InsertStrengthThreeCards(p);
+                CardStrengthLogic.GetCardStrengthThreeCards(p);
                 
             }
             Cardlogiccs.ShowAllPlayersCard(list);

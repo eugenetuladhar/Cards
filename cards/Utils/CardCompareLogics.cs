@@ -87,14 +87,14 @@ namespace cards.Utils
 
                 }
             }
-            else if (player1.cardsinInteger[0] > player2.cardsinInteger[0])
+            else if (player1.cardsinInteger[2] > player2.cardsinInteger[2])
             {
                 player1.result = CardResult.WIN;
                 player2.result = CardResult.LOSE;
                 Winnerlist.Clear();
                 Winnerlist.Add(player1);
             }
-            else if (player1.cardsinInteger[0] < player2.cardsinInteger[0])
+            else if (player1.cardsinInteger[2] < player2.cardsinInteger[2])
             {
                 player2.result = CardResult.WIN;
                 player1.result = CardResult.LOSE;

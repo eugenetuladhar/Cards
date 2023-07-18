@@ -257,6 +257,8 @@ namespace cards.Utils
 
         private static void HumanPlayerLogic(Player.Player HumanPlayer)
         {
+            // Sort the list based on Property1
+            HumanPlayer.CardInHand.Sort((a,b)=> a.GetCardType().CompareTo(b.GetCardType()));
             bool finalform = false;
             string value = "";
             while (!finalform)
@@ -303,26 +305,76 @@ namespace cards.Utils
                     Console.WriteLine("Invalid input! Try Again!");
                 }
 
-                Console.ReadLine();
                 Console.Clear();
             }
             Console.WriteLine("Cards Confirmed!");
-            //after confirm fill kitty strength
-            foreach (var item in HumanPlayer.CardInHand)
+            // quad logic
+            if (HumanPlayer.CardInHand[0].GetCardValue() == HumanPlayer.CardInHand[1].GetCardValue() &&
+                HumanPlayer.CardInHand[1].GetCardValue() == HumanPlayer.CardInHand[2].GetCardValue() &&
+                HumanPlayer.CardInHand[1].GetCardValue() == HumanPlayer.CardInHand[3].GetCardValue())
             {
-                HumanPlayer.FinalKittyHand.Add(item);
-
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                HumanPlayer.CardInHand.Clear();
-                for (int j = 0; j < 3; j++)
+                for (int i = 0; i < 5; i++)
                 {
-                    HumanPlayer.CardInHand.Add( HumanPlayer.FinalKittyHand[j + (i * 3)]);
+                    HumanPlayer.FinalKittyHand.Add(HumanPlayer.CardInHand[i]);
+
                 }
-                CardStrengthLogic.InsertStrengthThreeCards(HumanPlayer);
-                HumanPlayer.kittyStrength.Add(HumanPlayer.strength);
+                HumanPlayer.kittyStrength.Add(CardStrength.Quad);
             }
+            else
+            {
+                //after confirm fill kitty strength
+                foreach (var item in HumanPlayer.CardInHand)
+                {
+                    HumanPlayer.FinalKittyHand.Add(item);
+
+                }
+                for (int i = 0; i < 3; i++)
+                {
+                    HumanPlayer.CardInHand.Clear();
+                    for (int j = 0; j < 3; j++)
+                    {
+                        HumanPlayer.CardInHand.Add(HumanPlayer.FinalKittyHand[j + (i * 3)]);
+                    }
+                    CardStrengthLogic.GetCardStrengthThreeCards(HumanPlayer);
+                    HumanPlayer.kittyStrength.Add(HumanPlayer.strength);
+                }
+                //check kitty strength and put it in order if its not
+                if (CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[1]) <
+                    CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[2]))
+                {
+                    CardStrength temp = HumanPlayer.kittyStrength[1];
+                    HumanPlayer.kittyStrength[1] = HumanPlayer.kittyStrength[2];
+                    HumanPlayer.kittyStrength[2] = temp;
+
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 4-1, 7-1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 5 - 1, 8 - 1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 6 - 1, 9 - 1);
+                }
+                if (CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[0]) <
+                    CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[2]))
+                {
+                    CardStrength temp = HumanPlayer.kittyStrength[0];
+                    HumanPlayer.kittyStrength[0] = HumanPlayer.kittyStrength[2];
+                    HumanPlayer.kittyStrength[2] = temp;
+
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 1 - 1, 7 - 1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 2 - 1, 8 - 1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 3 - 1, 9 - 1);
+                }
+                if (CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[0]) <
+                    CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[1]))
+                {
+                    CardStrength temp = HumanPlayer.kittyStrength[0];
+                    HumanPlayer.kittyStrength[0] = HumanPlayer.kittyStrength[1];
+                    HumanPlayer.kittyStrength[1] = temp;
+
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 1 - 1, 4 - 1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 2 - 1, 5 - 1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 3 - 1, 6 - 1);
+                }
+            }
+            HumanPlayer.cardsinInteger = Cardlogiccs.GetCardIntegerValue(HumanPlayer.CardInHand);
+            HumanPlayer.cardsinInteger.Sort();
         }
 
         private static void HandleCommonCards(Player.Player p)

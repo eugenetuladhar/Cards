@@ -111,5 +111,9 @@ namespace cards.Utils
             cardlist[to] = temp;
             return cardlist;
         }
+        public static List<Card> SortCards(List<Card> cardlist)
+        {
+            return cardlist;
+        }
     }
 }

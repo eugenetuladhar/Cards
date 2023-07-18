@@ -16,11 +16,11 @@ namespace cards
             string playagain = "n";
             while (mainmenu)
             {
-                if (playagain != "y")
+                if (playagain != "y" || playagain !="Y")
                 {
                     Console.WriteLine(" Which game to play ?");
                     Console.WriteLine(" 1 . Flash");
-                    Console.WriteLine(" 2 . Kitty (Under Construction)");
+                    Console.WriteLine(" 2 . Kitty");
                     Console.WriteLine(" 0 . Exit");
                     value = Console.ReadLine();
                 }
