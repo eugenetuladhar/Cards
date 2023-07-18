@@ -11,8 +11,8 @@ namespace cards.Utils
 {
     public class KittyLogic
     {
-        private static Dictionary< int,Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
-        private static bool IsKitty=false;
+        private static Dictionary<int, Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
+        private static bool IsKitty = false;
         private static int numberofKitty;
         public static void RunKitty()
         {
@@ -80,13 +80,16 @@ namespace cards.Utils
             DetermineWinner(playerlist);
             Console.ReadLine();
 
-            if (IsKitty) { AfterKittyLogic(playerlist,carddeck); }
-            Console.ReadLine();
+            if (IsKitty)
+            {
+                AfterKittyLogic(playerlist, carddeck);
+                Console.ReadLine();
+            }
 
             Console.Clear();
         }
 
-        private static void AfterKittyLogic(List<Player.Player> playerlist,CardCompleteDeck carddeck)
+        private static void AfterKittyLogic(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
             while (IsKitty)
             {
@@ -115,13 +118,13 @@ namespace cards.Utils
         }
 
         private static void DetermineWinner(List<Player.Player> playerlist)
-        { 
+        {
             for (int round = 0; round < 3; round++)
             {
                 int CurrentIndexWinner = 0;
                 for (int i = 0; i < playerlist.Count(); i++)
                 {
-                    
+
                     //reuse flash logic code adjusting value
                     CardCompareLogics.ResetWinnerlist();
                     playerlist[i].strength = playerlist[i].kittyStrength[round];
@@ -129,7 +132,7 @@ namespace cards.Utils
                     playerlist[i].CardInHand.Clear();
                     for (int k = 0; k < 3; k++)
                     {
-                        playerlist[i].CardInHand.Add(playerlist[i].FinalKittyHand[k+(round*3)]);
+                        playerlist[i].CardInHand.Add(playerlist[i].FinalKittyHand[k + (round * 3)]);
                         playerlist[i].cardsinInteger.Add(CardConversion.ConversionValuetoInteger(playerlist[i].CardInHand[k].GetCardValue()));
                     }
                     for (int j = 0; j < playerlist[i].cardsinInteger.Count(); j++)//Ace to 14 value
@@ -159,7 +162,7 @@ namespace cards.Utils
                 Console.WriteLine($"*********************** Round {round + 1} ***********************");
                 Cardlogiccs.ShowAllPlayersCard(playerlist);
 
-                if (roundwinnerlist.Count()>1)
+                if (roundwinnerlist.Count() > 1)
                 {
                     //all draw
                     AssignAllPlayerkittyStrength(CardResult.DRAW, round, playerlist);
@@ -173,7 +176,7 @@ namespace cards.Utils
                     foreach (var roundwinner in roundwinnerlist)
                     {
                         roundwinner.Kittyresult[round] = CardResult.WIN;
-                        Console.WriteLine($"****** Winner of Round {round+1} is {roundwinner.GetName} by {roundwinner.kittyStrength[round]} ******");
+                        Console.WriteLine($"****** Winner of Round {round + 1} is {roundwinner.GetName} by {roundwinner.kittyStrength[round]} ******");
                         Console.WriteLine();
                         AllRoundWinners[round + 1] = roundwinner;
                     }
@@ -191,9 +194,9 @@ namespace cards.Utils
             {
                 if (p.kittyStrength.Contains(CardStrength.Quad))
                 {
-                    AllRoundWinners[index] =p;
-                    index=index+1;
-                    returnvalue= true;
+                    AllRoundWinners[index] = p;
+                    index = index + 1;
+                    returnvalue = true;
                 }
             }
             return returnvalue;
@@ -203,11 +206,11 @@ namespace cards.Utils
         {
             if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners[1].kittyStrength.Contains(CardStrength.Quad))
             {
-                string quadwinner=AllRoundWinners[1].GetName;
-                int highestquadvalue = CardConversion.ConversionValuetoInteger(AllRoundWinners[1].FinalKittyHand[0].GetCardValue(),true);
+                string quadwinner = AllRoundWinners[1].GetName;
+                int highestquadvalue = CardConversion.ConversionValuetoInteger(AllRoundWinners[1].FinalKittyHand[0].GetCardValue(), true);
                 foreach (var item in AllRoundWinners)
                 {
-                    if (highestquadvalue < CardConversion.ConversionValuetoInteger(item.Value.FinalKittyHand[0].GetCardValue(),true))
+                    if (highestquadvalue < CardConversion.ConversionValuetoInteger(item.Value.FinalKittyHand[0].GetCardValue(), true))
                     {
                         highestquadvalue = CardConversion.ConversionValuetoInteger(item.Value.FinalKittyHand[0].GetCardValue(), true);
                         quadwinner = item.Value.GetName;
@@ -296,53 +299,92 @@ namespace cards.Utils
         private static void HumanPlayerLogic(Player.Player HumanPlayer)
         {
             // Sort the list based on Property1
-            HumanPlayer.CardInHand.Sort((a,b)=> a.GetCardType().CompareTo(b.GetCardType()));
+            HumanPlayer.CardInHand.Sort((a, b) => a.GetCardType().CompareTo(b.GetCardType()));
             bool finalform = false;
             string value = "";
+
+            ConsoleKeyInfo keyInfo;// test
+            int gapSize = 0;
+            bool move = false;
+            string symbol = "-";
             while (!finalform)
             {
                 Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Fill FROM and TO to SWAP Position OR Press 'X' to confirm Final form)");
                 Console.WriteLine();
                 HumanPlayer.DisplayeCardInHand();
-                Console.WriteLine("Pos : 1          2           3           4           5           6           7           8           9");
-                int fromvalue, tovalue;
-                Console.Write(" Swap cards From : ");
-                value = Console.ReadLine();
-                if (value == "X" || value == "x")
+                Console.WriteLine("Pos : 1           2           3           4           5           6           7           8           9");
+
+                string gap = new string(' ', gapSize);
+                string formattedText = gap + gap + gap + gap + gap + gap + gap + gap + gap + gap + gap + gap + symbol;
+                Console.WriteLine("      {0}", formattedText);
+                keyInfo = Console.ReadKey(true); // Read key without displaying it
+
+                if (keyInfo.Key == ConsoleKey.LeftArrow && gapSize > 0)
+                {
+                    if (move == true)
+                    { HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, gapSize, gapSize - 1); }
+                    gapSize--;
+                }
+                else if (keyInfo.Key == ConsoleKey.RightArrow && gapSize < 8)
+                {
+                    if (move == true)
+                    { HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, gapSize, gapSize + 1); }
+                    gapSize++;
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    if (move == false)
+                    {
+                        move = true;
+                        symbol = "*";
+                    } else if (move == true)
+                    {
+                        move = false;
+                        symbol = "-";
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.X)
                 {
                     finalform = true;
                 }
-                else if (checkInputRange(value))
-                {
-                    fromvalue = int.Parse(value);
-                    bool tovaluecheck = false;
-                    while (!tovaluecheck)
-                    {
-                        Console.Write(" Swap cards To : ");
-                        value = Console.ReadLine();
-                        if (value == "X" || value == "x")
-                        {
-                            finalform = true;
-                            tovaluecheck = true;
-                        }
-                        else if (checkInputRange(value))
-                        {
-                            tovalue = int.Parse(value);
-                            HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, fromvalue - 1, tovalue - 1);
-                            Console.WriteLine("Swap Completed");
-                            tovaluecheck = true;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid To value!! Try Again!!");
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid input! Try Again!");
-                }
 
+                //int fromvalue, tovalue;
+                //Console.Write(" Swap cards From : ");
+                //value = Console.ReadLine();
+                //if (value == "X" || value == "x")
+                //{
+                //    finalform = true;
+                //}
+                //else if (checkInputRange(value))
+                //{
+                //    fromvalue = int.Parse(value);
+                //    bool tovaluecheck = false;
+                //    while (!tovaluecheck)
+                //    {
+                //        Console.Write(" Swap cards To : ");
+                //        value = Console.ReadLine();
+                //        if (value == "X" || value == "x")
+                //        {
+                //            finalform = true;
+                //            tovaluecheck = true;
+                //        }
+                //        else if (checkInputRange(value))
+                //        {
+                //            tovalue = int.Parse(value);
+                //            HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, fromvalue - 1, tovalue - 1);
+                //            Console.WriteLine("Swap Completed");
+                //            tovaluecheck = true;
+                //        }
+                //        else
+                //        {
+                //            Console.WriteLine("Invalid To value!! Try Again!!");
+                //        }
+                //    }
+                //}
+                //else
+                //{
+                //    Console.WriteLine("Invalid input! Try Again!");
+                //}
                 Console.Clear();
             }
             Console.WriteLine("Cards Confirmed!");
@@ -384,7 +426,7 @@ namespace cards.Utils
                     HumanPlayer.kittyStrength[1] = HumanPlayer.kittyStrength[2];
                     HumanPlayer.kittyStrength[2] = temp;
 
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 4-1, 7-1);
+                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 4 - 1, 7 - 1);
                     Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 5 - 1, 8 - 1);
                     Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 6 - 1, 9 - 1);
                 }
@@ -473,9 +515,9 @@ namespace cards.Utils
                             foreach (var item in values)
                             {
                                 Card? c1 = p.CardInHand.Find(c => c.GetCardValue() == item && c.GetCardType() == card.GetCardType());
-                                if (c1 != null) 
-                                { 
-                                    p.MovetoFinalKittyHand(c1); 
+                                if (c1 != null)
+                                {
+                                    p.MovetoFinalKittyHand(c1);
                                 }
                                 else
                                 {
@@ -594,7 +636,7 @@ namespace cards.Utils
                 }
                 else
                 {
-                    colorMap.Add(card.GetCardType(),new List<CardValue> { card.GetCardValue() });
+                    colorMap.Add(card.GetCardType(), new List<CardValue> { card.GetCardValue() });
                 }
             }
             // find run in each card type
@@ -718,7 +760,7 @@ namespace cards.Utils
                     {
                         p.MovetoFinalKittyHand(singlecard);
                     }
-                    if(num==2)
+                    if (num == 2)
                     {
                         p.MovetoFinalKittyHand(p.CardInHand[0]);
                     }

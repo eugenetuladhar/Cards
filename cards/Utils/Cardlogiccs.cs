@@ -13,7 +13,6 @@ namespace cards.Utils
         public static CardGameType CurrentGame { get; set; }
         public static void Deal(List<Player.Player> list, CardCompleteDeck c, int numberofcardstodeal,bool reveal = true)
         {
-            Console.WriteLine("*** Dealing cards ***");
             for (int i = 0; i < numberofcardstodeal; i++)
             {
                 foreach (var name in list)
