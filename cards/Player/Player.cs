@@ -77,7 +77,13 @@ namespace cards.Player
         }
         public void Reset()
         {
+            FinalKittyHand.Clear();
+            cardsinInteger.Clear();
+            kittyStrength.Clear();
+            strength = CardStrength.NotDecided;
+            result = CardResult.NONE;
             CardInHand.Clear();
+            Kittyresult.Clear();
         }
         public void ShowPickThrowMessage(Card card,bool pickorthrow,bool reveal=true)
         {

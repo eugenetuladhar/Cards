@@ -37,13 +37,10 @@ namespace cards.Cards_files
                     return 2;
                 case CardStrength.Common:
                     return 1;
-                    break;
                 case CardStrength.NotDecided:
                     return -1;
-                    break;
                 default:
                     return -1;
-                    break;
             }
         }
     }

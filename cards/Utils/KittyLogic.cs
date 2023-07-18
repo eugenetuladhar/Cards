@@ -12,6 +12,8 @@ namespace cards.Utils
     public class KittyLogic
     {
         private static Dictionary< int,Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
+        private static bool IsKitty=false;
+        private static int numberofKitty;
         public static void RunKitty()
         {
             Cardlogiccs.CurrentGame = CardGameType.KITTY;
@@ -76,9 +78,40 @@ namespace cards.Utils
 
             //compare and choose winner
             DetermineWinner(playerlist);
-
             Console.ReadLine();
+
+            if (IsKitty) { AfterKittyLogic(playerlist,carddeck); }
+            Console.ReadLine();
+
             Console.Clear();
+        }
+
+        private static void AfterKittyLogic(List<Player.Player> playerlist,CardCompleteDeck carddeck)
+        {
+            while (IsKitty)
+            {
+                Console.Clear();
+                numberofKitty++;
+                Console.WriteLine($"Previous game was ended in Kitty, Current Number of Kittys : {numberofKitty}");
+                carddeck.Reset();
+                foreach (var p in playerlist)
+                {
+                    p.Reset();
+
+                }
+                //shuffle
+                carddeck.Shuffle();
+
+                //Deal 
+                KittyDeal(playerlist, carddeck);
+                //start game
+                StartPlaying(playerlist);
+
+                //compare and choose winner
+                DetermineWinner(playerlist);
+                Console.ReadLine();
+            }
+            Console.WriteLine($"Total Number of Kittys : {numberofKitty}");
         }
 
         private static void DetermineWinner(List<Player.Player> playerlist)
@@ -181,22 +214,27 @@ namespace cards.Utils
                     }
                 }
                 Console.WriteLine($" ******* The Winner of this game is {quadwinner} with Quads!! ******* ");
+                IsKitty = false;
             }
             else if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners.Keys.Contains(3) && AllRoundWinners[1] == AllRoundWinners[2] && AllRoundWinners[2] == AllRoundWinners[3])
             {
                 Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} with SALAM!! ******* ");
+                IsKitty = false;
             }
             else if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners[1] == AllRoundWinners[2])
             {
                 Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[1].GetName} ******* ");
+                IsKitty = false;
             }
             else if (AllRoundWinners.Keys.Contains(3) && AllRoundWinners.Keys.Contains(2) && AllRoundWinners[3] == AllRoundWinners[2])
             {
                 Console.WriteLine($" ******* The Winner of this game is {AllRoundWinners[3].GetName} ******* ");
+                IsKitty = false;
             }
             else
             {
                 Console.WriteLine($" *** The Game has ended in KITTY *** ");
+                IsKitty = true;
             }
         }
 
@@ -263,7 +301,7 @@ namespace cards.Utils
             string value = "";
             while (!finalform)
             {
-                Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Fill From and To to SWAP Position OR Press X to confirm Final form)");
+                Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Fill FROM and TO to SWAP Position OR Press 'X' to confirm Final form)");
                 Console.WriteLine();
                 HumanPlayer.DisplayeCardInHand();
                 Console.WriteLine("Pos : 1          2           3           4           5           6           7           8           9");
