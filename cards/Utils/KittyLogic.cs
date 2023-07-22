@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -82,20 +83,38 @@ namespace cards.Utils
 
             if (IsKitty)
             {
-                AfterKittyLogic(playerlist, carddeck);
+                AfterKittyorplayagainLogic(playerlist, carddeck);
                 Console.ReadLine();
+            }
+            else
+            {
+                Askplayagain(playerlist,carddeck);
             }
 
             Console.Clear();
         }
 
-        private static void AfterKittyLogic(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        private static void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
-            while (IsKitty)
+            Console.Clear();
+            Console.WriteLine("Do you want to play again?(y/n)");
+            string playagain = Console.ReadLine();
+            if (playagain == "y" || playagain == "Y")
+            {
+                AfterKittyorplayagainLogic(playerlist, carddeck);
+            }
+        }
+
+        private static void AfterKittyorplayagainLogic(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        {
+            do
             {
                 Console.Clear();
-                numberofKitty++;
-                Console.WriteLine($"Previous game was ended in Kitty, Current Number of Kittys : {numberofKitty}");
+                if (IsKitty)
+                {
+                    numberofKitty++;
+                    Console.WriteLine($"Previous game was ended in Kitty, Current Number of Kittys : {numberofKitty}");
+                }
                 carddeck.Reset();
                 foreach (var p in playerlist)
                 {
@@ -113,8 +132,9 @@ namespace cards.Utils
                 //compare and choose winner
                 DetermineWinner(playerlist);
                 Console.ReadLine();
-            }
+            } while (IsKitty);
             Console.WriteLine($"Total Number of Kittys : {numberofKitty}");
+            Askplayagain(playerlist,carddeck);
         }
 
         private static void DetermineWinner(List<Player.Player> playerlist)
@@ -306,10 +326,10 @@ namespace cards.Utils
             ConsoleKeyInfo keyInfo;// test
             int gapSize = 0;
             bool move = false;
-            string symbol = "-";
+            string symbol = "_";
             while (!finalform)
             {
-                Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Fill FROM and TO to SWAP Position OR Press 'X' to confirm Final form)");
+                Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Use <- and -> OR Press 'X' to confirm Final form)");
                 Console.WriteLine();
                 HumanPlayer.DisplayeCardInHand();
                 Console.WriteLine("Pos : 1           2           3           4           5           6           7           8           9");

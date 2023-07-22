@@ -13,33 +13,25 @@ namespace cards
         {
             bool mainmenu = true;
             string value = "";
-            string playagain = "n";
             while (mainmenu)
             {
-                if (playagain != "y" || playagain !="Y")
-                {
-                    Console.WriteLine(" Which game to play ?");
-                    Console.WriteLine(" 1 . Flash");
-                    Console.WriteLine(" 2 . Kitty");
-                    Console.WriteLine(" 0 . Exit");
-                    value = Console.ReadLine();
-                }
+                Console.WriteLine(" Which game to play ?");
+                Console.WriteLine(" 1 . Flash");
+                Console.WriteLine(" 2 . Kitty");
+                Console.WriteLine(" 0 . Exit");
+                value = Console.ReadLine();
                 switch (value)
                 {
                     case "1":
                         Console.Clear();
                         Console.WriteLine("** Flash Game **");
                         FlashLogic.RunFlash();
-                        Console.WriteLine("** PLAY AGAIN? (y/n) **");
-                        playagain = Console.ReadLine();
                         Console.Clear();
                         break;
                     case "2":
                         Console.Clear();
                         Console.WriteLine("** Kitty Game **");
                         KittyLogic.RunKitty();
-                        Console.WriteLine("** PLAY AGAIN? (y/n) **");
-                        playagain = Console.ReadLine();
                         Console.Clear();
                         break;
                     case "0":

@@ -26,6 +26,12 @@ namespace cards.Utils
             List<Player.Player> playerlist = new List<Player.Player>();
             playerlist = Cardlogiccs.GetPlayers();
             
+            StartGame(playerlist, carddeck );
+
+        }
+
+        private static void StartGame(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        {
             //shuffle
             carddeck.Shuffle();
 
@@ -33,14 +39,14 @@ namespace cards.Utils
             FlashLogic.FlashDeal(playerlist, carddeck);
 
             //testcode
-            playerlist[0].CardInHand.Clear();
-            playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
-            playerlist[0].CardInHand.Add(new Card(CardType.Heart, CardValue.Six));
-            playerlist[0].CardInHand.Add(new Card(CardType.Spade, CardValue.Four));
-            playerlist[1].CardInHand.Clear();
-            playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Four));
-            playerlist[1].CardInHand.Add(new Card(CardType.Diamond, CardValue.King));
-            playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Ten));
+            //playerlist[0].CardInHand.Clear();
+            //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
+            //playerlist[0].CardInHand.Add(new Card(CardType.Heart, CardValue.Six));
+            //playerlist[0].CardInHand.Add(new Card(CardType.Spade, CardValue.Four));
+            //playerlist[1].CardInHand.Clear();
+            //playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Four));
+            //playerlist[1].CardInHand.Add(new Card(CardType.Diamond, CardValue.King));
+            //playerlist[1].CardInHand.Add(new Card(CardType.Club, CardValue.Ten));
             //playerlist[2].CardInHand.Clear();
             //playerlist[2].CardInHand.Add(new Card(CardType.Club, CardValue.Four));
             //playerlist[2].CardInHand.Add(new Card(CardType.Diamond, CardValue.Five));
@@ -58,7 +64,9 @@ namespace cards.Utils
             Cardlogiccs.ShowAllPlayersCard(CardCompareLogics.GetWinnerlist());
             Console.ReadLine();
             Console.Clear();
+            Askplayagain(playerlist, carddeck);
         }
+
         public static void FlashDeal(List<Player.Player> list, CardCompleteDeck c)
         {
             int numberofcardstodeal = 3;
@@ -77,7 +85,23 @@ namespace cards.Utils
             Console.WriteLine("");
             
         }
+        private static void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        {
+            Console.Clear();
+            Console.WriteLine("Do you want to play again?(y/n)");
+            string playagain = Console.ReadLine();
+            if (playagain == "y" || playagain == "Y")
+            {
+                carddeck.Reset();
+                foreach (var p in playerlist)
+                {
+                    p.Reset();
 
+                }
+                StartGame(playerlist, carddeck);
+            }
+            Console.Clear();
+        }
         private static void CalculateWinner(List<Player.Player> list)
         {
             
