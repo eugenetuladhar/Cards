@@ -12,7 +12,7 @@ namespace cards.Player
         Bill,
         Jack,
         Matt,
-        John,
+        Dave,
         Jim,
         Pam,
         Linda,

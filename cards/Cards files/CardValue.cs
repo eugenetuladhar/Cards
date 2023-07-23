@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace cards.Cards_files
 {
-    public enum CardValue{
+    public enum CardValue
+    {
         Ace,
-        Two, 
+        Two,
         Three,
         Four,
         Five,
@@ -20,15 +21,15 @@ namespace cards.Cards_files
         Jacks,
         Queen,
         King
-     }
+    }
     public static class CardConversion
     {
-        public static int ConversionValuetoInteger(CardValue item,bool greateracevalue = false)
+        public static int ConversionValuetoInteger(CardValue item, bool greateracevalue = false)
         {
             switch (item)
             {
                 case CardValue.Ace:
-                    if(greateracevalue)
+                    if (greateracevalue)
                     {
                         return 14;
                     }
@@ -94,6 +95,75 @@ namespace cards.Cards_files
                     return CardValue.King;
                 default: return 0;
             }
+        }
+
+        public static string GetPrintedForm(Card card)
+        {//"\u2665", "\u2666", "\u2663", "\u2660" }
+            string returnvalue = "";
+            switch (card.GetCardType())
+            {
+                case CardType.Spade:
+                    returnvalue = "\u2660";
+                    break;
+                case CardType.Club:
+                    returnvalue = "\u2663";
+                    break;
+                case CardType.Diamond:
+                    returnvalue = "\u2666";
+                    break;
+                case CardType.Heart:
+                    returnvalue = "\u2665";
+                    break;
+                default:
+                    returnvalue = "no suits";
+                    break;
+
+            }
+
+            switch (card.GetCardValue())
+            {
+                case CardValue.Ace:
+                    returnvalue = returnvalue + "A ";
+                    break;
+                case CardValue.Two:
+                    returnvalue = returnvalue + "2 ";
+                    break;
+                case CardValue.Three:
+                    returnvalue = returnvalue + "3 ";
+                    break;
+                case CardValue.Four:
+                    returnvalue = returnvalue + "4 ";
+                    break;
+                case CardValue.Five:
+                    returnvalue = returnvalue + "5 ";
+                    break;
+                case CardValue.Six:
+                    returnvalue = returnvalue + "6 ";
+                    break;
+                case CardValue.Seven:
+                    returnvalue = returnvalue + "7 ";
+                    break;
+                case CardValue.Eight:
+                    returnvalue = returnvalue + "8 ";
+                    break;
+                case CardValue.Nine:
+                    returnvalue = returnvalue + "9 ";
+                    break;
+                case CardValue.Ten:
+                    returnvalue = returnvalue + "10";
+                    break;
+                case CardValue.Jacks:
+                    returnvalue = returnvalue + "J ";
+                    break;
+                case CardValue.Queen:
+                    returnvalue = returnvalue + "Q ";
+                    break;
+                case CardValue.King:
+                    returnvalue = returnvalue + "K ";
+                    break;
+                default: return returnvalue + "no value";
+            }
+            return returnvalue;
         }
     }
 }

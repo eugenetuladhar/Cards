@@ -21,7 +21,7 @@ namespace cards.Utils
             Cardlogiccs.CurrentGame = CardGameType.FLASH;
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
-            Console.WriteLine("*** New Card deck created ***");
+            Console.WriteLine();
             // pleyer logic
             List<Player.Player> playerlist = new List<Player.Player>();
             playerlist = Cardlogiccs.GetPlayers();
@@ -38,6 +38,17 @@ namespace cards.Utils
             //Deal 
             FlashLogic.FlashDeal(playerlist, carddeck);
 
+            // show self card
+            Console.Clear();
+            Console.WriteLine(" * Game has Started *");
+            Console.WriteLine();
+            Console.WriteLine(" Your card is :");
+            playerlist[0].DisplayeCardInHand();
+            Console.WriteLine();
+            Console.WriteLine("...");
+            Console.ReadLine();
+            Console.Clear();
+            
             //testcode
             //playerlist[0].CardInHand.Clear();
             //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
@@ -57,11 +68,15 @@ namespace cards.Utils
             //playerlist[3].CardInHand.Add(new Card(CardType.Spade, CardValue.Nine));
             // Game Logic 
             FlashLogic.DetermineWinner(playerlist);
-            Console.WriteLine("** Calculating Winner........ **");
+            Console.WriteLine("** Calculating Winner.. **");
             Console.ReadLine();
             //Display winners
             Console.WriteLine("**  Winner   **");
+            Console.WriteLine();
+
             Cardlogiccs.ShowAllPlayersCard(CardCompareLogics.GetWinnerlist());
+            Console.WriteLine();
+            Console.WriteLine("...");
             Console.ReadLine();
             Console.Clear();
             Askplayagain(playerlist, carddeck);
@@ -79,6 +94,8 @@ namespace cards.Utils
                 CardStrengthLogic.GetCardStrengthThreeCards(p);
                 
             }
+            Console.WriteLine(" * Showing all players cards *");
+            Console.WriteLine();
             Cardlogiccs.ShowAllPlayersCard(list);
 
             CalculateWinner(list);

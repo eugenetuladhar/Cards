@@ -20,7 +20,7 @@ namespace cards.Utils
             Cardlogiccs.CurrentGame = CardGameType.KITTY;
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
-            Console.WriteLine("*** New Card deck created ***");
+            Console.WriteLine();
             // pleyer logic
             List<Player.Player> playerlist = new List<Player.Player>();
             playerlist = Cardlogiccs.GetPlayers();
@@ -271,6 +271,7 @@ namespace cards.Utils
 
         private static void StartPlaying(List<Player.Player> playerlist)
         {
+            Console.Clear();
             //human player
             HumanPlayerLogic(playerlist[0]);
 
@@ -326,16 +327,18 @@ namespace cards.Utils
             ConsoleKeyInfo keyInfo;// test
             int gapSize = 0;
             bool move = false;
-            string symbol = "_";
+            string symbol = "\u2191";
             while (!finalform)
             {
                 Console.WriteLine("Your cards are as follow, Please rearrange it to final form : (Use <- and -> OR Press 'X' to confirm Final form)");
                 Console.WriteLine();
+                Console.WriteLine("            1              2              3");
+                Console.WriteLine("        ---------      ---------      ---------");
+                Console.Write("     ");
                 HumanPlayer.DisplayeCardInHand();
-                Console.WriteLine("Pos : 1           2           3           4           5           6           7           8           9");
 
                 string gap = new string(' ', gapSize);
-                string formattedText = gap + gap + gap + gap + gap + gap + gap + gap + gap + gap + gap + gap + symbol;
+                string formattedText = gap + gap + gap + gap + gap + symbol;
                 Console.WriteLine("      {0}", formattedText);
                 keyInfo = Console.ReadKey(true); // Read key without displaying it
 
@@ -356,11 +359,11 @@ namespace cards.Utils
                     if (move == false)
                     {
                         move = true;
-                        symbol = "*";
+                        symbol = "\u2194";
                     } else if (move == true)
                     {
                         move = false;
-                        symbol = "-";
+                        symbol = "↑";
                     }
                 }
                 else if (keyInfo.Key == ConsoleKey.X)

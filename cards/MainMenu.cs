@@ -15,10 +15,12 @@ namespace cards
             string value = "";
             while (mainmenu)
             {
-                Console.WriteLine(" Which game to play ?");
-                Console.WriteLine(" 1 . Flash");
-                Console.WriteLine(" 2 . Kitty");
-                Console.WriteLine(" 0 . Exit");
+                Console.WriteLine();
+                Console.WriteLine(" CHOOSE GAME TO PLAY ?");
+                Console.WriteLine();
+                Console.WriteLine("    1 . FLASH");
+                Console.WriteLine("    2 . KITTY");
+                Console.WriteLine("    0 . EXIT");
                 value = Console.ReadLine();
                 switch (value)
                 {

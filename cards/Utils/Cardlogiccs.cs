@@ -75,7 +75,7 @@ namespace cards.Utils
                     hashave = "have";
                 }
 
-                Console.WriteLine($"    {player.GetName} {hashave} {player.strength} :");
+                Console.WriteLine($"{player.GetName} {hashave} {player.strength} :");
                 
                 player.DisplayeCardInHand();
                 Console.WriteLine();

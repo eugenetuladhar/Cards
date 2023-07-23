@@ -33,16 +33,21 @@ namespace cards.Player
         }
         public void DisplayeCardInHand()
         {
-            string messagetoprint = "";
-            //if (iskitty && FinalKittyHand.Any())
-            //{
-            //    CardInHand = FinalKittyHand;
-            //}
             foreach(Card card in CardInHand)
             {
-                messagetoprint = messagetoprint+" *" + card.GetCardType() + card.GetCardValue() + "*";
+                if(card.GetCardType()==CardType.Diamond|| card.GetCardType() == CardType.Heart)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+                }
+                else
+                {
+                    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+                }
+                Console.ResetColor();
+                //messagetoprint = messagetoprint+" " + CardConversion.GetPrintedForm(card) + " ";
             }
-            Console.WriteLine(messagetoprint);
+            Console.WriteLine();
         }
             
         public void PickCard(Card card,bool reveal=true)
