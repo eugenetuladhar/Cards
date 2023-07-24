@@ -1,4 +1,4 @@
-﻿using cards.Utils;
+﻿using cards.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +27,15 @@ namespace cards
                     case "1":
                         Console.Clear();
                         Console.WriteLine("** Flash Game **");
-                        FlashLogic.RunFlash();
+                        FlashGame f = new FlashGame();
+                        f.Run();
                         Console.Clear();
                         break;
                     case "2":
                         Console.Clear();
                         Console.WriteLine("** Kitty Game **");
-                        KittyLogic.RunKitty();
+                        KittyGame k = new KittyGame();
+                        k.Run();
                         Console.Clear();
                         break;
                     case "0":

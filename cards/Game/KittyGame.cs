@@ -1,5 +1,7 @@
 ﻿using cards.Cards_files;
+using cards.Interface;
 using cards.Player;
+using cards.Utils;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Engine;
 using System;
 using System.Collections.Generic;
@@ -8,22 +10,31 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace cards.Utils
+namespace cards.Game
 {
-    public class KittyLogic
+    public class KittyGame : IGame
     {
-        private static Dictionary<int, Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
-        private static bool IsKitty = false;
-        private static int numberofKitty;
-        public static void RunKitty()
+        public CardGameType GameName { get; set; }
+        public int MAX_NUM_PLAYERS { get; set; }
+        public int NUM_CARDS_TO_DEAL { get; set; }
+        private Dictionary<int, Player.Player> AllRoundWinners = new Dictionary<int, Player.Player>();
+        private bool IsKitty = false;
+        private int numberofKitty;
+
+        public KittyGame()
         {
-            Cardlogiccs.CurrentGame = CardGameType.KITTY;
+            GameName = CardGameType.KITTY;
+            MAX_NUM_PLAYERS = 5;
+            NUM_CARDS_TO_DEAL = 9;
+        }
+        public void Run()
+        {
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
             Console.WriteLine();
             // pleyer logic
             List<Player.Player> playerlist = new List<Player.Player>();
-            playerlist = Cardlogiccs.GetPlayers();
+            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS);
 
             //shuffle
             carddeck.Shuffle();
@@ -88,13 +99,13 @@ namespace cards.Utils
             }
             else
             {
-                Askplayagain(playerlist,carddeck);
+                Askplayagain(playerlist, carddeck);
             }
 
             Console.Clear();
         }
 
-        private static void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        private void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
             Console.Clear();
             Console.WriteLine("Do you want to play again?(y/n)");
@@ -105,7 +116,7 @@ namespace cards.Utils
             }
         }
 
-        private static void AfterKittyorplayagainLogic(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        private void AfterKittyorplayagainLogic(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
             do
             {
@@ -134,10 +145,10 @@ namespace cards.Utils
                 Console.ReadLine();
             } while (IsKitty);
             Console.WriteLine($"Total Number of Kittys : {numberofKitty}");
-            Askplayagain(playerlist,carddeck);
+            Askplayagain(playerlist, carddeck);
         }
 
-        private static void DetermineWinner(List<Player.Player> playerlist)
+        private void DetermineWinner(List<Player.Player> playerlist)
         {
             for (int round = 0; round < 3; round++)
             {
@@ -152,7 +163,7 @@ namespace cards.Utils
                     playerlist[i].CardInHand.Clear();
                     for (int k = 0; k < 3; k++)
                     {
-                        playerlist[i].CardInHand.Add(playerlist[i].FinalKittyHand[k + (round * 3)]);
+                        playerlist[i].CardInHand.Add(playerlist[i].FinalKittyHand[k + round * 3]);
                         playerlist[i].cardsinInteger.Add(CardConversion.ConversionValuetoInteger(playerlist[i].CardInHand[k].GetCardValue()));
                     }
                     for (int j = 0; j < playerlist[i].cardsinInteger.Count(); j++)//Ace to 14 value
@@ -206,7 +217,7 @@ namespace cards.Utils
             GetKittyResult(playerlist);
         }
 
-        private static bool HaveQuadCards(List<Player.Player> playerlist)
+        private bool HaveQuadCards(List<Player.Player> playerlist)
         {
             bool returnvalue = false;
             int index = 1;
@@ -222,7 +233,7 @@ namespace cards.Utils
             return returnvalue;
         }
 
-        private static void GetKittyResult(List<Player.Player> playerlist)
+        private void GetKittyResult(List<Player.Player> playerlist)
         {
             if (AllRoundWinners.Keys.Contains(1) && AllRoundWinners[1].kittyStrength.Contains(CardStrength.Quad))
             {
@@ -261,7 +272,7 @@ namespace cards.Utils
             }
         }
 
-        private static void AssignAllPlayerkittyStrength(CardResult result, int round, List<Player.Player> playerlist)
+        private void AssignAllPlayerkittyStrength(CardResult result, int round, List<Player.Player> playerlist)
         {
             foreach (var p in playerlist)
             {
@@ -269,7 +280,7 @@ namespace cards.Utils
             }
         }
 
-        private static void StartPlaying(List<Player.Player> playerlist)
+        private void StartPlaying(List<Player.Player> playerlist)
         {
             Console.Clear();
             //human player
@@ -317,7 +328,7 @@ namespace cards.Utils
             }
         }
 
-        private static void HumanPlayerLogic(Player.Player HumanPlayer)
+        private void HumanPlayerLogic(Player.Player HumanPlayer)
         {
             // Sort the list based on Property1
             HumanPlayer.CardInHand.Sort((a, b) => a.GetCardType().CompareTo(b.GetCardType()));
@@ -360,7 +371,8 @@ namespace cards.Utils
                     {
                         move = true;
                         symbol = "\u2194";
-                    } else if (move == true)
+                    }
+                    else if (move == true)
                     {
                         move = false;
                         symbol = "↑";
@@ -436,7 +448,7 @@ namespace cards.Utils
                     HumanPlayer.CardInHand.Clear();
                     for (int j = 0; j < 3; j++)
                     {
-                        HumanPlayer.CardInHand.Add(HumanPlayer.FinalKittyHand[j + (i * 3)]);
+                        HumanPlayer.CardInHand.Add(HumanPlayer.FinalKittyHand[j + i * 3]);
                     }
                     CardStrengthLogic.GetCardStrengthThreeCards(HumanPlayer);
                     HumanPlayer.kittyStrength.Add(HumanPlayer.strength);
@@ -480,7 +492,7 @@ namespace cards.Utils
             HumanPlayer.cardsinInteger.Sort();
         }
 
-        private static void HandleCommonCards(Player.Player p)
+        private void HandleCommonCards(Player.Player p)
         {
             for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
             {
@@ -506,7 +518,7 @@ namespace cards.Utils
             }
         }
 
-        private static bool CheckColorCards(Player.Player p)
+        private bool CheckColorCards(Player.Player p)
         {
             Dictionary<CardType, List<CardValue>> colorMap = new Dictionary<CardType, List<CardValue>>();
             for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
@@ -559,7 +571,7 @@ namespace cards.Utils
             return false;
         }
 
-        private static bool CheckRunCards(Player.Player p)
+        private bool CheckRunCards(Player.Player p)
         {
             for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
             {
@@ -639,7 +651,7 @@ namespace cards.Utils
             return false;
         }
 
-        private static bool CheckColorRunCards(Player.Player p)
+        private bool CheckColorRunCards(Player.Player p)
         {
             for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
             {
@@ -758,7 +770,7 @@ namespace cards.Utils
             return false;
         }
 
-        private static bool CheckXnumCards(Player.Player p, int num)
+        private bool CheckXnumCards(Player.Player p, int num)
         {
             Dictionary<CardValue, int> countMap = new Dictionary<CardValue, int>();
             for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
@@ -818,12 +830,11 @@ namespace cards.Utils
             return false;
         }
 
-        public static void KittyDeal(List<Player.Player> list, CardCompleteDeck c)
+        public void KittyDeal(List<Player.Player> list, CardCompleteDeck c)
         {
-            int numberofcardstodeal = 9;
-            Cardlogiccs.Deal(list, c, numberofcardstodeal, false);
+            Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
         }
-        private static bool checkInputRange(string value)
+        private bool checkInputRange(string value)
         {
             return value == "1" || value == "2" || value == "3" || value == "4" || value == "5" || value == "6" || value == "7" || value == "8" || value == "9";
         }

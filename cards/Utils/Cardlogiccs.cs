@@ -10,7 +10,6 @@ namespace cards.Utils
 {
     public static class Cardlogiccs
     {
-        public static CardGameType CurrentGame { get; set; }
         public static void Deal(List<Player.Player> list, CardCompleteDeck c, int numberofcardstodeal,bool reveal = true)
         {
             for (int i = 0; i < numberofcardstodeal; i++)
@@ -21,14 +20,13 @@ namespace cards.Utils
                 }
             }
         }
-        public static int ReadNumberOfPlayers()
+        public static int ReadNumberOfPlayers(int MAXNUM)
         {
-            int maxnum = GetMaxNumPlayers();
             
             int numofplayers = 0;
             while (true)
             {
-                Console.Write($" Enter number of players (Min = 2 , Max = {maxnum}) : ");
+                Console.Write($" Enter number of players (Min = 2 , Max = {MAXNUM}) : ");
                 try
                 {
                     numofplayers = int.Parse(Console.ReadLine());
@@ -49,22 +47,6 @@ namespace cards.Utils
             }
         }
 
-        private static int GetMaxNumPlayers()
-        {
-            if (CurrentGame == CardGameType.FLASH)
-            {
-                return 10;
-            }
-            else if (CurrentGame == CardGameType.KITTY)
-            {
-                return 5;
-            }
-            else
-            {
-                return 3;
-            }
-        }
-
         public static void ShowAllPlayersCard(List<Player.Player> list)
         {
             foreach (var player in list)
@@ -82,9 +64,9 @@ namespace cards.Utils
             }
 
         }
-        public static List<Player.Player> GetPlayers()
+        public static List<Player.Player> GetPlayers(int MAX_NUM_PLAYERS)
         {
-            int numofplayers = ReadNumberOfPlayers();
+            int numofplayers = ReadNumberOfPlayers(MAX_NUM_PLAYERS);
             List<Player.Player> playerlist = new List<Player.Player>();
             for (int i = 0; i < numofplayers; i++)
             {

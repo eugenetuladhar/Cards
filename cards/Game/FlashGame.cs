@@ -10,33 +10,41 @@ using System.Threading.Tasks;
 using System.Data;
 using cards.Interface;
 using Newtonsoft.Json.Linq;
+using cards.Utils;
 
-namespace cards.Utils
+namespace cards.Game
 {
-    public class FlashLogic
+    public class FlashGame : IGame
     {
-        
-        public static void RunFlash() 
+        public CardGameType GameName { get; set; }
+        public int MAX_NUM_PLAYERS { get; set; }
+        public int NUM_CARDS_TO_DEAL { get; set; }
+        public FlashGame()
         {
-            Cardlogiccs.CurrentGame = CardGameType.FLASH;
+            GameName = CardGameType.FLASH;
+            MAX_NUM_PLAYERS = 10;
+            NUM_CARDS_TO_DEAL = 3;
+        }
+        public void Run()
+        {
             //New card instance
             CardCompleteDeck carddeck = new CardCompleteDeck();
             Console.WriteLine();
             // pleyer logic
             List<Player.Player> playerlist = new List<Player.Player>();
-            playerlist = Cardlogiccs.GetPlayers();
-            
-            StartGame(playerlist, carddeck );
+            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS);
+
+            StartGame(playerlist, carddeck);
 
         }
 
-        private static void StartGame(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        private void StartGame(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
             //shuffle
             carddeck.Shuffle();
 
             //Deal 
-            FlashLogic.FlashDeal(playerlist, carddeck);
+            FlashDeal(playerlist, carddeck);
 
             // show self card
             Console.Clear();
@@ -48,7 +56,7 @@ namespace cards.Utils
             Console.WriteLine("...");
             Console.ReadLine();
             Console.Clear();
-            
+
             //testcode
             //playerlist[0].CardInHand.Clear();
             //playerlist[0].CardInHand.Add(new Card(CardType.Diamond, CardValue.Queen));
@@ -67,7 +75,7 @@ namespace cards.Utils
             //playerlist[3].CardInHand.Add(new Card(CardType.Spade, CardValue.King));
             //playerlist[3].CardInHand.Add(new Card(CardType.Spade, CardValue.Nine));
             // Game Logic 
-            FlashLogic.DetermineWinner(playerlist);
+            DetermineWinner(playerlist);
             Console.WriteLine("** Calculating Winner.. **");
             Console.ReadLine();
             //Display winners
@@ -82,17 +90,16 @@ namespace cards.Utils
             Askplayagain(playerlist, carddeck);
         }
 
-        public static void FlashDeal(List<Player.Player> list, CardCompleteDeck c)
+        public void FlashDeal(List<Player.Player> list, CardCompleteDeck c)
         {
-            int numberofcardstodeal = 3;
-            Cardlogiccs.Deal(list, c, numberofcardstodeal,false);
+            Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
         }
-        public static void DetermineWinner(List<Player.Player> list)
+        public void DetermineWinner(List<Player.Player> list)
         {
             foreach (var p in list)
             {
                 CardStrengthLogic.GetCardStrengthThreeCards(p);
-                
+
             }
             Console.WriteLine(" * Showing all players cards *");
             Console.WriteLine();
@@ -100,9 +107,9 @@ namespace cards.Utils
 
             CalculateWinner(list);
             Console.WriteLine("");
-            
+
         }
-        private static void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        private void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
             Console.Clear();
             Console.WriteLine("Do you want to play again?(y/n)");
@@ -119,9 +126,9 @@ namespace cards.Utils
             }
             Console.Clear();
         }
-        private static void CalculateWinner(List<Player.Player> list)
+        private void CalculateWinner(List<Player.Player> list)
         {
-            
+
             int CurrentIndexWinner = 0;
             for (int i = 0; i < list.Count(); i++)
             {
@@ -137,9 +144,9 @@ namespace cards.Utils
                     continue;
                 }
                 CardCompareLogics.CompareTwoHands(list[i], list[CurrentIndexWinner]);
-                if (list[i].result == CardResult.WIN) 
-                { 
-                    CurrentIndexWinner = i; 
+                if (list[i].result == CardResult.WIN)
+                {
+                    CurrentIndexWinner = i;
                 }
             }
         }
