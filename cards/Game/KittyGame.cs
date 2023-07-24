@@ -40,7 +40,7 @@ namespace cards.Game
             carddeck.Shuffle();
 
             //Deal 
-            KittyDeal(playerlist, carddeck);
+            Deal(playerlist, carddeck);
 
             //Testcodes
             //var b = playerlist[0].CardInHand;
@@ -136,7 +136,7 @@ namespace cards.Game
                 carddeck.Shuffle();
 
                 //Deal 
-                KittyDeal(playerlist, carddeck);
+                Deal(playerlist, carddeck);
                 //start game
                 StartPlaying(playerlist);
 
@@ -145,6 +145,7 @@ namespace cards.Game
                 Console.ReadLine();
             } while (IsKitty);
             Console.WriteLine($"Total Number of Kittys : {numberofKitty}");
+            Console.ReadLine();
             Askplayagain(playerlist, carddeck);
         }
 
@@ -830,13 +831,9 @@ namespace cards.Game
             return false;
         }
 
-        public void KittyDeal(List<Player.Player> list, CardCompleteDeck c)
+        private void Deal(List<Player.Player> list, CardCompleteDeck c)
         {
             Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
-        }
-        private bool checkInputRange(string value)
-        {
-            return value == "1" || value == "2" || value == "3" || value == "4" || value == "5" || value == "6" || value == "7" || value == "8" || value == "9";
         }
     }
 }

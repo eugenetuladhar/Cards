@@ -19,6 +19,8 @@ namespace cards.Player
         public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
         public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
         public List<CardResult> Kittyresult = new List<CardResult>();//for kitty
+
+        public int Forecast_num_of_hands; // for Callbreak
         public bool TurnONOFFpickthrowMessage = false;
         public Player(string name,double bal=0)
         {

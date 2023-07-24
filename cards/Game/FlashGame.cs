@@ -44,7 +44,7 @@ namespace cards.Game
             carddeck.Shuffle();
 
             //Deal 
-            FlashDeal(playerlist, carddeck);
+            Deal(playerlist, carddeck);
 
             // show self card
             Console.Clear();
@@ -90,7 +90,7 @@ namespace cards.Game
             Askplayagain(playerlist, carddeck);
         }
 
-        public void FlashDeal(List<Player.Player> list, CardCompleteDeck c)
+        private void Deal(List<Player.Player> list, CardCompleteDeck c)
         {
             Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
         }

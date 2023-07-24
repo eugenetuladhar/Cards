@@ -64,9 +64,17 @@ namespace cards.Utils
             }
 
         }
-        public static List<Player.Player> GetPlayers(int MAX_NUM_PLAYERS)
+        public static List<Player.Player> GetPlayers(int MAX_NUM_PLAYERS,bool needreadnumberofplayers=true)
         {
-            int numofplayers = ReadNumberOfPlayers(MAX_NUM_PLAYERS);
+            int numofplayers;
+            if (needreadnumberofplayers)
+            {
+                numofplayers = ReadNumberOfPlayers(MAX_NUM_PLAYERS);
+            }
+            else
+            {
+                numofplayers = MAX_NUM_PLAYERS;
+            }
             List<Player.Player> playerlist = new List<Player.Player>();
             for (int i = 0; i < numofplayers; i++)
             {

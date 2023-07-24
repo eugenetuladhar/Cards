@@ -20,22 +20,30 @@ namespace cards
                 Console.WriteLine();
                 Console.WriteLine("    1 . FLASH");
                 Console.WriteLine("    2 . KITTY");
+                Console.WriteLine("    3 . CALLBREAK (under construction)");
                 Console.WriteLine("    0 . EXIT");
                 value = Console.ReadLine();
                 switch (value)
                 {
                     case "1":
                         Console.Clear();
-                        Console.WriteLine("** Flash Game **");
                         FlashGame f = new FlashGame();
+                        Console.WriteLine($"** Welcome to {f.GameName} Game **");
                         f.Run();
                         Console.Clear();
                         break;
                     case "2":
                         Console.Clear();
-                        Console.WriteLine("** Kitty Game **");
                         KittyGame k = new KittyGame();
+                        Console.WriteLine($"** Welcome to {k.GameName} Game **");
                         k.Run();
+                        Console.Clear();
+                        break;
+                    case "3":
+                        Console.Clear();
+                        CallBreakGame c = new CallBreakGame();
+                        Console.WriteLine($"** Welcome to {c.GameName} Game **");
+                        c.Run();
                         Console.Clear();
                         break;
                     case "0":

@@ -10,6 +10,7 @@ namespace cards.Cards_files
     {
         FLASH,
         KITTY,
+        CALLBREAK,
         NONE
     }
 }
