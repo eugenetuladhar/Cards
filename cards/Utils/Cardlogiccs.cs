@@ -100,9 +100,18 @@ namespace cards.Utils
             cardlist[to] = temp;
             return cardlist;
         }
-        public static List<Card> SortCards(List<Card> cardlist)
+        public static void PrintCard(Card card)
         {
-            return cardlist;
+            if (card.GetCardType() == CardType.Diamond || card.GetCardType() == CardType.Heart)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+            }
+            else
+            {
+                Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+            }
+            Console.ResetColor();
         }
     }
 }

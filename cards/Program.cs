@@ -8,4 +8,6 @@ using System.Data;
 
 Console.WriteLine("Test Cards");
 MainMenu.ExecuteCode();
+Console.WriteLine("Exiting Game. GoodBye!");
+
 

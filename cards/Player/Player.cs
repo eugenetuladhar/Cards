@@ -1,4 +1,5 @@
 ﻿using cards.Cards_files;
+using cards.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,17 +38,17 @@ namespace cards.Player
         {
             foreach(Card card in CardInHand)
             {
-                if(card.GetCardType()==CardType.Diamond|| card.GetCardType() == CardType.Heart)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
-                }
-                else
-                {
-                    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
-                }
-                Console.ResetColor();
-                //messagetoprint = messagetoprint+" " + CardConversion.GetPrintedForm(card) + " ";
+                Cardlogiccs.PrintCard(card);
+                //if(card.GetCardType()==CardType.Diamond|| card.GetCardType() == CardType.Heart)
+                //{
+                //    Console.ForegroundColor = ConsoleColor.Red;
+                //    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+                //}
+                //else
+                //{
+                //    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+                //}
+                //Console.ResetColor();
             }
             Console.WriteLine();
         }

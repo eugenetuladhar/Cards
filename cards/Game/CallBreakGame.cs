@@ -73,7 +73,7 @@ namespace cards.Game
                     Console.WriteLine("Enter again !!");
                     continue;
                 }
-                if (HumanPlayer.Forecast_num_of_hands > 0 && HumanPlayer.Forecast_num_of_hands < 10)
+                if (HumanPlayer.Forecast_num_of_hands > 0 && HumanPlayer.Forecast_num_of_hands < 14)
                 {
                     menu= false;
                 }
