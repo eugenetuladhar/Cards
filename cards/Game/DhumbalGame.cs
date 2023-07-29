@@ -45,14 +45,19 @@ namespace cards.Game
         private void Deal(List<Player.Player> list, CardCompleteDeck c)
         {
             Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
+            // display pick and throw cards
+            foreach (var p in list)
+            {
+                p.TurnONOFFpickthrowMessage = true;
+            }
         }
         private void CardInGroundLogic(Card card, bool pickorthrow)
         {
             if (pickorthrow)
             {
-                if (CardsInGround[CardsInGround.Count - 1] == card)
+                if (CardsInGround[CardsInGround.Count - 2] == card)
                 {
-                    CardsInGround.RemoveAt(CardsInGround.Count - 1);
+                    CardsInGround.RemoveAt(CardsInGround.Count - 2);
                 }
                 else
                 {
@@ -78,6 +83,8 @@ namespace cards.Game
             while (menu)
             {
                 Console.WriteLine("Your turn");
+                ShowGround();
+                Card cardonground = CardsInGround[CardsInGround.Count - 1];
                 Console.WriteLine();
                 Console.Write("     ");
                 HumanPlayer.DisplayeCardInHand();
@@ -115,8 +122,39 @@ namespace cards.Game
                 else if(keyInfo.Key == ConsoleKey.T)
                 {
                     // throw card
+                    Card cardtothrow = HumanPlayer.CardInHand[gapSize];
+                    CardInGroundLogic(cardtothrow, THROW);
+                    HumanPlayer.ThrowCard(cardtothrow);
 
-                    //start pick from ground or deck
+                    // pick from ground or deck
+                    Console.WriteLine(" Pick from Ground or Deck?");
+                    Console.WriteLine(" G or D");
+                    bool pickcomplete = false;
+                    while (!pickcomplete)
+                    {
+                        keyInfo = Console.ReadKey(true);
+                        
+                        if (keyInfo.Key == ConsoleKey.D)
+                        {
+                            Console.WriteLine(" Pick from Deck");
+                            pickcomplete = true;
+                            carddeck.Draw(HumanPlayer);
+                            Console.ReadLine();
+                        }
+                        else if (keyInfo.Key == ConsoleKey.G)
+                        {
+                            Console.WriteLine(" Pick from Ground");
+                            HumanPlayer.PickCard(cardonground);
+                            CardInGroundLogic(cardonground,PICK);
+                            pickcomplete = true;
+                            Console.ReadLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid input");
+                        }
+                    }
+                    gapSize = 0;
                 }
                 Console.Clear();
             }
@@ -135,9 +173,13 @@ namespace cards.Game
         {
             Console.Clear();
             InitialCardInground();
-            ShowGround();
+
+            // start loop until game ends
+
             //human player
             HumanPlayerLogic(playerlist[0]);
+            // comp player
+
         }
 
         private void InitialCardInground()
