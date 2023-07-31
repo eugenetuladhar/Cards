@@ -95,29 +95,35 @@ namespace cards.Player
         }
         public void ShowPickThrowMessage(Card card,bool pickorthrow,bool reveal=true)
         {
-            string acard,hashave="has";
-            if(reveal)
-            {
-                acard= ""+card.GetCardType() + card.GetCardValue();
-            }
-            else
-            {
-                acard = "card";
-            }
+            string acard="card",hashave="has";
+            
             if (Checkplayer_you())
             {
                 hashave = "have";
             }
 
-            if (pickorthrow)
+            if (pickorthrow&&reveal)
+            {
+                Console.Write($"****{Name} {hashave} picked");
+                Cardlogiccs.PrintCard(card);
+                Console.Write("****");
+            }
+            else if(pickorthrow==false&&reveal==true)
+            {
+                Console.Write($"****{Name} {hashave} picked");
+                Cardlogiccs.PrintCard(card);
+                Console.Write("****");
+            }
+            else if (pickorthrow==true && reveal==false)
             {
                 Console.WriteLine($"****{Name} {hashave} picked {acard} ****");
             }
-            else
+            else if(pickorthrow == false && reveal == false)
             {
                 Console.WriteLine($"****{Name} {hashave} thrown {acard} ****");
 
             }
+            Console.WriteLine();
         }
         public bool Checkplayer_you()
         {

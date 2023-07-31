@@ -14,14 +14,14 @@ namespace cards.Game
         public CardGameType GameName { get; set; }
         public int MAX_NUM_PLAYERS { get; set; }
         public int NUM_CARDS_TO_DEAL { get; set; }
-        private List<Card> CardsInGround { get; set; }
+        private List<List<Card>> CardsOnGround { get; set; }
         CardCompleteDeck carddeck;
         private bool PICK = true;
         private bool THROW = false;
         public DhumbalGame()
         {
             carddeck = new CardCompleteDeck();
-            CardsInGround = new List<Card>();
+            CardsOnGround = new List<List<Card>>();
             GameName = CardGameType.DHUMBAL;
             MAX_NUM_PLAYERS = 4;
             NUM_CARDS_TO_DEAL = 5;
@@ -51,24 +51,6 @@ namespace cards.Game
                 p.TurnONOFFpickthrowMessage = true;
             }
         }
-        private void CardInGroundLogic(Card card, bool pickorthrow)
-        {
-            if (pickorthrow)
-            {
-                if (CardsInGround[CardsInGround.Count - 2] == card)
-                {
-                    CardsInGround.RemoveAt(CardsInGround.Count - 2);
-                }
-                else
-                {
-                    Console.Error.WriteLine("Invalid pick");
-                }
-            }
-            else if (!pickorthrow)
-            {
-                CardsInGround.Add(card);
-            }
-        }
         private void HumanPlayerLogic(Player.Player HumanPlayer)
         {
             // Sort the list based on Property1
@@ -84,7 +66,7 @@ namespace cards.Game
             {
                 Console.WriteLine("Your turn");
                 ShowGround();
-                Card cardonground = CardsInGround[CardsInGround.Count - 1];
+                List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
                 Console.WriteLine();
                 Console.Write("     ");
                 HumanPlayer.DisplayeCardInHand();
@@ -123,31 +105,131 @@ namespace cards.Game
                 {
                     // throw card
                     Card cardtothrow = HumanPlayer.CardInHand[gapSize];
-                    CardInGroundLogic(cardtothrow, THROW);
                     HumanPlayer.ThrowCard(cardtothrow);
 
+                    //refresh screen logic
+                    Console.Clear();
+                    Console.WriteLine("Your turn");
+                    ShowGround();
+                    Console.WriteLine();
+                    Console.Write("     ");
+                    HumanPlayer.DisplayeCardInHand();
+                    Console.WriteLine();
+
+                    //extralogic
+                    Cardlogiccs.CardInGroundThrowLogic(cardtothrow, CardsOnGround);
+                    HumanPlayer.ShowPickThrowMessage(cardtothrow, THROW);
+
                     // pick from ground or deck
-                    Console.WriteLine(" Pick from Ground or Deck?");
-                    Console.WriteLine(" G or D");
+                    Console.Write( " Pick from: DECK ");
+                    foreach (var singlecard in currentcardsonground)
+                    {
+                        Console.Write("or");
+                        Cardlogiccs.PrintCard(singlecard);
+                    }
+                    Console.Write("?\n");
+
+                    gapSize = 0;
+                    gap = new string(' ', gapSize);
+                    string formattedText1 = gap + gap + gap + gap + gap + symbol;
+                    Console.WriteLine("             {0}", formattedText1);
                     bool pickcomplete = false;
                     while (!pickcomplete)
                     {
                         keyInfo = Console.ReadKey(true);
                         
-                        if (keyInfo.Key == ConsoleKey.D)
+                        if (keyInfo.Key == ConsoleKey.LeftArrow && gapSize > 0)
                         {
-                            Console.WriteLine(" Pick from Deck");
-                            pickcomplete = true;
-                            carddeck.Draw(HumanPlayer);
-                            Console.ReadLine();
+                            gapSize--;
+                            //refresh screen logic
+                            Console.Clear();
+                            Console.WriteLine("Your turn");
+                            ShowGround();
+                            Console.WriteLine();
+                            Console.Write("     ");
+                            HumanPlayer.DisplayeCardInHand();
+                            Console.WriteLine();
+
+                            Console.Write(" Pick from: DECK ");
+                            foreach (var singlecard in currentcardsonground)
+                            {
+                                Console.Write("or");
+                                Cardlogiccs.PrintCard(singlecard);
+                            }
+                            Console.Write("?\n");
+
+                            gap = new string(' ', gapSize);
+                            formattedText1 = gap + gap + gap + gap + gap + gap + gap + symbol;
+                            Console.WriteLine("             {0}", formattedText1);
+
+                            Console.WriteLine($"left arrow {gapSize}");
                         }
-                        else if (keyInfo.Key == ConsoleKey.G)
+                        else if (keyInfo.Key == ConsoleKey.RightArrow && gapSize < currentcardsonground.Count())
                         {
-                            Console.WriteLine(" Pick from Ground");
-                            HumanPlayer.PickCard(cardonground);
-                            CardInGroundLogic(cardonground,PICK);
-                            pickcomplete = true;
-                            Console.ReadLine();
+                            gapSize++;
+                            //refresh screen logic
+                            Console.Clear();
+                            Console.WriteLine("Your turn");
+                            ShowGround();
+                            Console.WriteLine();
+                            Console.Write("     ");
+                            HumanPlayer.DisplayeCardInHand();
+                            Console.WriteLine();
+
+                            Console.Write(" Pick from: DECK ");
+                            foreach (var singlecard in currentcardsonground)
+                            {
+                                Console.Write("or");
+                                Cardlogiccs.PrintCard(singlecard);
+                            }
+                            Console.Write("?\n");
+
+                            gap = new string(' ', gapSize);
+                            formattedText1 = gap + gap + gap + gap + gap + gap + gap + symbol;
+                            Console.WriteLine("             {0}", formattedText1);
+
+                            Console.WriteLine($"right arrow {gapSize}");
+                        }
+                        else if (keyInfo.Key == ConsoleKey.Enter)
+                        {
+                            if (gapSize == 0)
+                            {
+                                Console.WriteLine(" Pick from Deck");
+                                pickcomplete = true;
+                                carddeck.Draw(HumanPlayer);
+                                Console.ReadLine();
+                            }else if(gapSize == 1)
+                            {
+                                Console.WriteLine(" Pick from Ground");
+                                HumanPlayer.PickCard(currentcardsonground[0]);
+                                Cardlogiccs.CardInGroundPickLogic(currentcardsonground[0], CardsOnGround);
+                                pickcomplete = true;
+                                Console.ReadLine();
+                            }
+                            else if (gapSize == 2)
+                            {
+                                Console.WriteLine(" Pick from Ground");
+                                HumanPlayer.PickCard(currentcardsonground[1]);
+                                Cardlogiccs.CardInGroundPickLogic(currentcardsonground[1], CardsOnGround);
+                                pickcomplete = true;
+                                Console.ReadLine();
+                            }
+                            else if (gapSize == 3)
+                            {
+                                Console.WriteLine(" Pick from Ground");
+                                HumanPlayer.PickCard(currentcardsonground[2]);
+                                Cardlogiccs.CardInGroundPickLogic(currentcardsonground[2], CardsOnGround);
+                                pickcomplete = true;
+                                Console.ReadLine();
+                            }
+                            else if (gapSize == 4)
+                            {
+                                Console.WriteLine(" Pick from Ground");
+                                HumanPlayer.PickCard(currentcardsonground[3]);
+                                Cardlogiccs.CardInGroundPickLogic(currentcardsonground[3], CardsOnGround);
+                                pickcomplete = true;
+                                Console.ReadLine();
+                            }
                         }
                         else
                         {
@@ -164,7 +246,10 @@ namespace cards.Game
             Console.WriteLine("********* GROUND **********");
             Console.WriteLine();
             Console.Write("        ");
-            Cardlogiccs.PrintCard( CardsInGround[CardsInGround.Count - 1]);
+            foreach (var card in CardsOnGround[CardsOnGround.Count()-1])
+            {
+                Cardlogiccs.PrintCard(card);
+            }
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine("********* GROUND **********");
@@ -184,7 +269,9 @@ namespace cards.Game
 
         private void InitialCardInground()
         {
-            CardsInGround.Add(carddeck.TotalDeck[carddeck.TotalDeck.Count - 1]);
+            List<Card> temp = new List<Card>();
+            temp.Add(carddeck.TotalDeck[carddeck.TotalDeck.Count - 1]);
+            CardsOnGround.Add(temp);
             carddeck.TotalDeck.RemoveAt(carddeck.TotalDeck.Count - 1);
         }
     }

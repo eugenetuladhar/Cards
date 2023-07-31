@@ -10,19 +10,19 @@ namespace cards.Utils
 {
     public static class Cardlogiccs
     {
-        public static void Deal(List<Player.Player> list, CardCompleteDeck c, int numberofcardstodeal,bool reveal = true)
+        public static void Deal(List<Player.Player> list, CardCompleteDeck c, int numberofcardstodeal, bool reveal = true)
         {
             for (int i = 0; i < numberofcardstodeal; i++)
             {
                 foreach (var name in list)
                 {
-                    c.Draw(name,reveal);
+                    c.Draw(name, reveal);
                 }
             }
         }
         public static int ReadNumberOfPlayers(int MAXNUM)
         {
-            
+
             int numofplayers = 0;
             while (true)
             {
@@ -58,13 +58,13 @@ namespace cards.Utils
                 }
 
                 Console.WriteLine($"{player.GetName} {hashave} {player.strength} :");
-                
+
                 player.DisplayeCardInHand();
                 Console.WriteLine();
             }
 
         }
-        public static List<Player.Player> GetPlayers(int MAX_NUM_PLAYERS,bool needreadnumberofplayers=true)
+        public static List<Player.Player> GetPlayers(int MAX_NUM_PLAYERS, bool needreadnumberofplayers = true)
         {
             int numofplayers;
             if (needreadnumberofplayers)
@@ -93,12 +93,23 @@ namespace cards.Utils
             }
             return listvalue;
         }
-        public static List<Card> SwapPositionofCards(List<Card> cardlist,int from,int to) 
+        public static List<Card> SwapPositionofCards(List<Card> cardlist, int from, int to)
         {
             Card temp = cardlist[from];
             cardlist[from] = cardlist[to];
             cardlist[to] = temp;
             return cardlist;
+        }
+        public static string GetPrintCardString(Card card)
+        {
+            if (card.GetCardType() == CardType.Diamond || card.GetCardType() == CardType.Heart)
+            {
+                return (" " + CardConversion.GetPrintedForm(card) + " ");
+            }
+            else
+            {
+                return (" " + CardConversion.GetPrintedForm(card) + " ");
+            }
         }
         public static void PrintCard(Card card)
         {
@@ -112,6 +123,26 @@ namespace cards.Utils
                 Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
             }
             Console.ResetColor();
+        }
+        public static void CardInGroundThrowLogic(Card card, List<List<Card>> cardonground)
+        {
+            List<Card> cards = new List<Card> { card };
+            CardInGroundThrowLogic(cards,cardonground);
+        }
+        public static void CardInGroundThrowLogic(List<Card> cards, List<List<Card>> cardonground)
+        {
+            cardonground.Add(cards);
+        }
+        public static void CardInGroundPickLogic(Card card, List<List<Card>> cardonground)
+        {
+            if (cardonground[cardonground.Count - 2].Contains(card))
+            {
+                cardonground[cardonground.Count - 2].Remove(card);
+            }
+            else
+            {
+                Console.Error.WriteLine("Invalid pick");
+            }
         }
     }
 }
