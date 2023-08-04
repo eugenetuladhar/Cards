@@ -19,6 +19,7 @@ namespace cards.Game
         private bool gamecomplete = false;
         private bool PICK = true;
         private bool THROW = false;
+        private Player.Player Finisher { get; set; }
         List<Player.Player> playerlist;
         public DhumbalGame()
         {
@@ -55,6 +56,22 @@ namespace cards.Game
             //Display winners
             Console.WriteLine("**  Winner   **");
             Console.WriteLine();
+            foreach (var player in playerlist)
+            {
+                if (player == Finisher)
+                {
+                    continue;
+                }
+                else  if (Cardlogiccs.GetTotalIntegerValue(Finisher.CardInHand)<=
+                    Cardlogiccs.GetTotalIntegerValue(player.CardInHand)) 
+                {
+                    Finisher= player;
+                }
+                else
+                {
+                    Console.WriteLine("problem in winner dermining process");
+                }
+            }
         }
 
         private void Deal()
@@ -122,6 +139,7 @@ namespace cards.Game
                     if(Cardlogiccs.GetTotalIntegerValue(HumanPlayer.CardInHand)<6)
                     {
                         //determinewinner
+                        Finisher = HumanPlayer;
                         gamecomplete= true;
                         menu = false;
                     }
@@ -300,6 +318,7 @@ namespace cards.Game
                     //cpu player turn
                     if (Cardlogiccs.GetTotalIntegerValue(playerlist[i].CardInHand)<6)
                     {
+                        Finisher = playerlist[i];
                         gamecomplete = true; break;
                     }
                 }
