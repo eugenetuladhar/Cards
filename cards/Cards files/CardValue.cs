@@ -97,7 +97,7 @@ namespace cards.Cards_files
             }
         }
 
-        public static string GetPrintedForm(Card card)
+        public static string GetSuitSymbolAndNumber(Card card)
         {//"\u2665", "\u2666", "\u2663", "\u2660" }
             string returnvalue = "";
             switch (card.GetCardType())

@@ -16,8 +16,10 @@ namespace cards.Game
         public int NUM_CARDS_TO_DEAL { get; set; }
         private List<List<Card>> CardsOnGround { get; set; }
         CardCompleteDeck carddeck;
+        private bool gamecomplete = false;
         private bool PICK = true;
         private bool THROW = false;
+        List<Player.Player> playerlist;
         public DhumbalGame()
         {
             carddeck = new CardCompleteDeck();
@@ -31,22 +33,35 @@ namespace cards.Game
             //New card instance
             Console.WriteLine();
             // Player logic
-            List<Player.Player> playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS);
+            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS);
 
             //shuffle
             carddeck.Shuffle();
 
             //Deal
-            Deal(playerlist, carddeck);
+            Deal();
 
             //Start
-            StartPlaying(playerlist);
+            StartPlaying();
+
+            //Display winner
+            DetermineWinner();
         }
-        private void Deal(List<Player.Player> list, CardCompleteDeck c)
+
+        private void DetermineWinner()
         {
-            Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
+            Cardlogiccs.ShowAllPlayersCard(playerlist);
+            Console.ReadLine();
+            //Display winners
+            Console.WriteLine("**  Winner   **");
+            Console.WriteLine();
+        }
+
+        private void Deal()
+        {
+            Cardlogiccs.Deal(playerlist, carddeck, NUM_CARDS_TO_DEAL, false);
             // display pick and throw cards
-            foreach (var p in list)
+            foreach (var p in playerlist)
             {
                 p.TurnONOFFpickthrowMessage = true;
             }
@@ -64,6 +79,7 @@ namespace cards.Game
             bool menu = true;
             while (menu)
             {
+                Console.Clear();
                 Console.WriteLine("Your turn");
                 ShowGround();
                 List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
@@ -101,7 +117,20 @@ namespace cards.Game
                         symbol = "↑";
                     }
                 }
-                else if(keyInfo.Key == ConsoleKey.T)
+                else if (keyInfo.Key == ConsoleKey.X)
+                {
+                    if(Cardlogiccs.GetTotalIntegerValue(HumanPlayer.CardInHand)<6)
+                    {
+                        //determinewinner
+                        gamecomplete= true;
+                        menu = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not eligible to submit. Should be less than 6");
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.T)
                 {
                     // throw card
                     Card cardtothrow = HumanPlayer.CardInHand[gapSize];
@@ -237,8 +266,8 @@ namespace cards.Game
                         }
                     }
                     gapSize = 0;
+                    menu = false;
                 }
-                Console.Clear();
             }
         }
         private void ShowGround()
@@ -254,16 +283,27 @@ namespace cards.Game
             Console.WriteLine();
             Console.WriteLine("********* GROUND **********");
         }
-        private void StartPlaying(List<Player.Player> playerlist)
+        private void StartPlaying()
         {
             Console.Clear();
             InitialCardInground();
 
             // start loop until game ends
+            while (!gamecomplete)
+            {
 
-            //human player
-            HumanPlayerLogic(playerlist[0]);
-            // comp player
+                //human player
+                HumanPlayerLogic(playerlist[0]);
+                // comp player
+                for (int i = 1; i < playerlist.Count(); i++)
+                {
+                    //cpu player turn
+                    if (Cardlogiccs.GetTotalIntegerValue(playerlist[i].CardInHand)<6)
+                    {
+                        gamecomplete = true; break;
+                    }
+                }
+            }
 
         }
 

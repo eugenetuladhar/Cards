@@ -93,6 +93,16 @@ namespace cards.Utils
             }
             return listvalue;
         }
+        public static int GetTotalIntegerValue(List<Card> cardInHand)
+        {
+            int sum = 0;
+            var listofcardsininteger = GetCardIntegerValue(cardInHand);
+            foreach (var singlevalue in listofcardsininteger)
+            {
+                sum += singlevalue;
+            }
+            return sum;
+        }
         public static List<Card> SwapPositionofCards(List<Card> cardlist, int from, int to)
         {
             Card temp = cardlist[from];
@@ -100,27 +110,16 @@ namespace cards.Utils
             cardlist[to] = temp;
             return cardlist;
         }
-        public static string GetPrintCardString(Card card)
-        {
-            if (card.GetCardType() == CardType.Diamond || card.GetCardType() == CardType.Heart)
-            {
-                return (" " + CardConversion.GetPrintedForm(card) + " ");
-            }
-            else
-            {
-                return (" " + CardConversion.GetPrintedForm(card) + " ");
-            }
-        }
         public static void PrintCard(Card card)
         {
             if (card.GetCardType() == CardType.Diamond || card.GetCardType() == CardType.Heart)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+                Console.Write(" " + CardConversion.GetSuitSymbolAndNumber(card) + " ");
             }
             else
             {
-                Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
+                Console.Write(" " + CardConversion.GetSuitSymbolAndNumber(card) + " ");
             }
             Console.ResetColor();
         }
