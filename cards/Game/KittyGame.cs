@@ -26,6 +26,7 @@ namespace cards.Game
             GameName = CardGameType.KITTY;
             MAX_NUM_PLAYERS = 5;
             NUM_CARDS_TO_DEAL = 9;
+            numberofKitty= 0;
         }
         public void Run()
         {
@@ -65,23 +66,23 @@ namespace cards.Game
             //c.Add(new Card(CardType.Spade, CardValue.Jacks));
             //c.Add(new Card(CardType.Spade, CardValue.Nine));
             //c.Add(new Card(CardType.Spade, CardValue.Ten));
-            //c.Add(new Card(CardType.Spade, CardValue.Eight));
-            //c.Add(new Card(CardType.Spade, CardValue.Seven));
-            //c.Add(new Card(CardType.Spade, CardValue.Six));
-            //c.Add(new Card(CardType.Diamond, CardValue.Ace));
-            //c.Add(new Card(CardType.Club, CardValue.Queen));
-            //c.Add(new Card(CardType.Club, CardValue.King));
+            //c.Add(new Card(CardType.Diamond, CardValue.Six));
+            //c.Add(new Card(CardType.Diamond, CardValue.Two));
+            //c.Add(new Card(CardType.Diamond, CardValue.King));
+            //c.Add(new Card(CardType.Spade, CardValue.Five));
+            //c.Add(new Card(CardType.Club, CardValue.Two));
+            //c.Add(new Card(CardType.Club, CardValue.Three));
             //var a = playerlist[2].CardInHand;
             //a.Clear();
             //a.Add(new Card(CardType.Heart, CardValue.Nine));
             //a.Add(new Card(CardType.Club, CardValue.Eight));
-            //a.Add(new Card(CardType.Spade, CardValue.Seven));
-            //a.Add(new Card(CardType.Diamond, CardValue.Two));
-            //a.Add(new Card(CardType.Heart, CardValue.Jacks));
-            //a.Add(new Card(CardType.Heart, CardValue.Two));
-            //a.Add(new Card(CardType.Club, CardValue.Two));
+            //a.Add(new Card(CardType.Club, CardValue.Ten));
+            //a.Add(new Card(CardType.Spade, CardValue.Nine));
+            //a.Add(new Card(CardType.Spade, CardValue.Eight));
             //a.Add(new Card(CardType.Spade, CardValue.Two));
-            //a.Add(new Card(CardType.Club, CardValue.Nine));
+            //a.Add(new Card(CardType.Club, CardValue.Two));
+            //a.Add(new Card(CardType.Heart, CardValue.Five));
+            //a.Add(new Card(CardType.Club, CardValue.Four));
             //Cardlogiccs.ShowAllPlayersCard(playerlist);
 
 
@@ -107,6 +108,7 @@ namespace cards.Game
 
         private void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
         {
+            numberofKitty = 0;
             Console.Clear();
             Console.WriteLine("Do you want to play again?(y/n)");
             string playagain = Console.ReadLine();
@@ -303,7 +305,7 @@ namespace cards.Game
                     {
                         playerlist[i].kittyStrength.Add(CardStrength.Trial);
                     }
-                    else if (CheckColorRunCards(playerlist[i]))
+                    else if (CardStrengthLogic.CheckColorRunCards(playerlist[i],3,GameName))
                     {
                         playerlist[i].kittyStrength.Add(CardStrength.ColorSequence);
                     }
@@ -652,124 +654,6 @@ namespace cards.Game
             return false;
         }
 
-        private bool CheckColorRunCards(Player.Player p)
-        {
-            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
-            {
-                if (p.cardsinInteger[j] == 14)
-                {
-                    p.cardsinInteger[j] = 1;
-                }
-            }
-            p.cardsinInteger.Sort();
-            Dictionary<CardType, List<CardValue>> colorMap = new Dictionary<CardType, List<CardValue>>();
-            // fill dictionary as per each card type
-            foreach (var card in p.CardInHand)
-            {
-                if (colorMap.ContainsKey(card.GetCardType()))
-                {
-                    colorMap[card.GetCardType()].Add(card.GetCardValue());
-                }
-                else
-                {
-                    colorMap.Add(card.GetCardType(), new List<CardValue> { card.GetCardValue() });
-                }
-            }
-            // find run in each card type
-            foreach (var item in colorMap)
-            {
-                var currentcolor = item.Key;
-                List<int> cardlistint = new List<int>();
-                if (item.Value.Count() > 2)
-                {
-                    // convert to integer
-                    foreach (var singlecardvalue in item.Value)
-                    {
-                        cardlistint.Add(CardConversion.ConversionValuetoInteger(singlecardvalue));
-                    }
-                    cardlistint.Sort();
-                    // check KQA
-                    if (cardlistint.Contains(1) && cardlistint.Contains(12) &&
-                        cardlistint.Contains(13))
-                    {
-                        // get card
-                        Card? c1 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                        c.GetCardValue() == CardValue.Ace);
-                        Card? c2 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                        c.GetCardValue() == CardValue.Queen);
-                        Card? c3 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                        c.GetCardValue() == CardValue.King);
-                        //remove from cardinhand and move to final hand
-                        if (c1 != null && c2 != null && c3 != null)
-                        {
-                            p.MovetoFinalKittyHand(c1);
-                            p.MovetoFinalKittyHand(c2);
-                            p.MovetoFinalKittyHand(c3);
-                        }
-                        else
-                        {
-                            Console.WriteLine("error in colorrun");
-                        }
-                        return true;
-                    }
-                    //Check A23
-                    if (cardlistint.Contains(1) && cardlistint.Contains(2) &&
-                        cardlistint.Contains(3))
-                    {
-                        // get card
-                        Card? c1 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                        c.GetCardValue() == CardValue.Ace);
-                        Card? c2 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                        c.GetCardValue() == CardValue.Two);
-                        Card? c3 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                        c.GetCardValue() == CardValue.Three);
-                        //remove from cardinhand and move to final hand
-                        if (c1 != null && c2 != null && c3 != null)
-                        {
-                            p.MovetoFinalKittyHand(c1);
-                            p.MovetoFinalKittyHand(c2);
-                            p.MovetoFinalKittyHand(c3);
-                        }
-                        else
-                        {
-                            Console.WriteLine("error in colorrun");
-                        }
-                        return true;
-                    }
-                    // check for another runs
-                    for (int i = cardlistint.Count() - 2; i > 0; i--)
-                    {
-                        if (cardlistint[i - 1] == cardlistint[i] - 1 &&
-                            cardlistint[i + 1] == cardlistint[i] + 1)
-                        {
-                            CardValue cv1 = CardConversion.ConversionIntegertoValue(cardlistint[i - 1]);
-                            CardValue cv2 = CardConversion.ConversionIntegertoValue(cardlistint[i]);
-                            CardValue cv3 = CardConversion.ConversionIntegertoValue(cardlistint[i + 1]);
-                            // get card
-                            Card? c1 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                            c.GetCardValue() == cv1);
-                            Card? c2 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                            c.GetCardValue() == cv2);
-                            Card? c3 = p.CardInHand.Find(c => c.GetCardType() == currentcolor &&
-                            c.GetCardValue() == cv3);
-                            //remove from cardinhand and move to final hand
-                            if (c1 != null && c2 != null && c3 != null)
-                            {
-                                p.MovetoFinalKittyHand(c1);
-                                p.MovetoFinalKittyHand(c2);
-                                p.MovetoFinalKittyHand(c3);
-                            }
-                            else
-                            {
-                                Console.WriteLine("error in colorrun");
-                            }
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
         private void Deal(List<Player.Player> list, CardCompleteDeck c)
         {
             Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);

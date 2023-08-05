@@ -326,7 +326,14 @@ namespace cards.Game
                     playerlist[i].cardsinInteger.Sort();
 
                     //checkquads and trail
-                    if (CardStrengthLogic.CheckXnumCards(playerlist[i],4,GameName))
+                    if (CardStrengthLogic.CheckColorRunCards(playerlist[i], 5, GameName))
+                    {
+                        playerlist[i].ThrowCards();
+                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
+                        playerlist[i].ThrowCardList.Clear();
+
+                    }
+                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i],4,GameName))
                     {
                         //Check ground card compatibility
 
@@ -337,6 +344,13 @@ namespace cards.Game
                         //pick from deck or ground logic
 
                     }
+                    else if (CardStrengthLogic.CheckColorRunCards(playerlist[i], 4, GameName))
+                    {
+                        playerlist[i].ThrowCards();
+                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
+                        playerlist[i].ThrowCardList.Clear();
+
+                    }
                     else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 3, GameName))
                     {
                         playerlist[i].ThrowCards();
@@ -344,7 +358,7 @@ namespace cards.Game
                         playerlist[i].ThrowCardList.Clear();
 
                     }
-                    else if ()
+                    else if (CardStrengthLogic.CheckColorRunCards(playerlist[i],3,GameName))
                     {
                         playerlist[i].ThrowCards();
                         Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
