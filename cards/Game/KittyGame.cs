@@ -385,44 +385,6 @@ namespace cards.Game
                 {
                     finalform = true;
                 }
-
-                //int fromvalue, tovalue;
-                //Console.Write(" Swap cards From : ");
-                //value = Console.ReadLine();
-                //if (value == "X" || value == "x")
-                //{
-                //    finalform = true;
-                //}
-                //else if (checkInputRange(value))
-                //{
-                //    fromvalue = int.Parse(value);
-                //    bool tovaluecheck = false;
-                //    while (!tovaluecheck)
-                //    {
-                //        Console.Write(" Swap cards To : ");
-                //        value = Console.ReadLine();
-                //        if (value == "X" || value == "x")
-                //        {
-                //            finalform = true;
-                //            tovaluecheck = true;
-                //        }
-                //        else if (checkInputRange(value))
-                //        {
-                //            tovalue = int.Parse(value);
-                //            HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, fromvalue - 1, tovalue - 1);
-                //            Console.WriteLine("Swap Completed");
-                //            tovaluecheck = true;
-                //        }
-                //        else
-                //        {
-                //            Console.WriteLine("Invalid To value!! Try Again!!");
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    Console.WriteLine("Invalid input! Try Again!");
-                //}
                 Console.Clear();
             }
             Console.WriteLine("Cards Confirmed!");
