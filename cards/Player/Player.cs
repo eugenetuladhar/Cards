@@ -17,13 +17,14 @@ namespace cards.Player
         public List<int> cardsinInteger = new List<int>();
         public double Balance = new double();
 
+        public List<Card> ThrowCardList = new List<Card>();
         public List<Card> FinalKittyHand = new List<Card>(); // for Kitty
         public List<CardStrength> kittyStrength = new List<CardStrength>(); //for kitty
         public List<CardResult> Kittyresult = new List<CardResult>();//for kitty
 
         public int Forecast_num_of_hands; // for Callbreak
         public bool TurnONOFFpickthrowMessage = false;
-        public Player(string name,double bal=0)
+        public Player(string name, double bal = 0)
         {
             Name = name;
             strength = CardStrength.NotDecided;
@@ -36,7 +37,7 @@ namespace cards.Player
         }
         public void DisplayeCardInHand()
         {
-            foreach(Card card in CardInHand)
+            foreach (Card card in CardInHand)
             {
                 Cardlogiccs.PrintCard(card);
                 //if(card.GetCardType()==CardType.Diamond|| card.GetCardType() == CardType.Heart)
@@ -52,8 +53,8 @@ namespace cards.Player
             }
             Console.WriteLine();
         }
-            
-        public void PickCard(Card card,bool reveal=true)
+
+        public void PickSingleCard(Card card, bool reveal = true)
         {
             this.CardInHand.Add(card);
             if (TurnONOFFpickthrowMessage)
@@ -61,7 +62,7 @@ namespace cards.Player
                 ShowPickThrowMessage(card, true, reveal);
             }
         }
-        public bool ThrowCard(Card card,bool reveal= true)
+        public bool ThrowSingleCard(Card card, bool reveal = true)
         {
             for (int i = 0; i < CardInHand.Count(); i++)
             {
@@ -78,10 +79,22 @@ namespace cards.Player
             }
             return false;
         }
+        public void ThrowCards()
+        {
+            foreach (Card card in ThrowCardList)
+            {
+                ThrowSingleCard(card);
+            }
+        }
         public void MovetoFinalKittyHand(Card card)
         {
             Remove(card);
             FinalKittyHand.Add(card);
+        }
+        public void MovetoThrowCardList(Card card)
+        {
+            Remove(card);
+            ThrowCardList.Add(card);
         }
         public void Reset()
         {

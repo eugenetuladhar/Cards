@@ -151,8 +151,8 @@ namespace cards.Game
                 else if (keyInfo.Key == ConsoleKey.T)
                 {
                     // throw card
-                    Card cardtothrow = HumanPlayer.CardInHand[gapSize];
-                    HumanPlayer.ThrowCard(cardtothrow);
+                    Card cardtothrow = HumanPlayer.CardInHand[gapSize]; // todo need to change Card to Cardlist to throw more than one cards
+                    HumanPlayer.ThrowSingleCard(cardtothrow);
 
                     //refresh screen logic
                     Console.Clear();
@@ -248,7 +248,7 @@ namespace cards.Game
                             }else if(gapSize == 1)
                             {
                                 Console.WriteLine(" Pick from Ground");
-                                HumanPlayer.PickCard(currentcardsonground[0]);
+                                HumanPlayer.PickSingleCard(currentcardsonground[0]);
                                 Cardlogiccs.CardInGroundPickLogic(currentcardsonground[0], CardsOnGround);
                                 pickcomplete = true;
                                 Console.ReadLine();
@@ -256,7 +256,7 @@ namespace cards.Game
                             else if (gapSize == 2)
                             {
                                 Console.WriteLine(" Pick from Ground");
-                                HumanPlayer.PickCard(currentcardsonground[1]);
+                                HumanPlayer.PickSingleCard(currentcardsonground[1]);
                                 Cardlogiccs.CardInGroundPickLogic(currentcardsonground[1], CardsOnGround);
                                 pickcomplete = true;
                                 Console.ReadLine();
@@ -264,7 +264,7 @@ namespace cards.Game
                             else if (gapSize == 3)
                             {
                                 Console.WriteLine(" Pick from Ground");
-                                HumanPlayer.PickCard(currentcardsonground[2]);
+                                HumanPlayer.PickSingleCard(currentcardsonground[2]);
                                 Cardlogiccs.CardInGroundPickLogic(currentcardsonground[2], CardsOnGround);
                                 pickcomplete = true;
                                 Console.ReadLine();
@@ -272,7 +272,7 @@ namespace cards.Game
                             else if (gapSize == 4)
                             {
                                 Console.WriteLine(" Pick from Ground");
-                                HumanPlayer.PickCard(currentcardsonground[3]);
+                                HumanPlayer.PickSingleCard(currentcardsonground[3]);
                                 Cardlogiccs.CardInGroundPickLogic(currentcardsonground[3], CardsOnGround);
                                 pickcomplete = true;
                                 Console.ReadLine();
@@ -321,11 +321,47 @@ namespace cards.Game
                         Finisher = playerlist[i];
                         gamecomplete = true; break;
                     }
+
+                    playerlist[i].cardsinInteger = Cardlogiccs.GetCardIntegerValue(playerlist[i].CardInHand);
+                    playerlist[i].cardsinInteger.Sort();
+
+                    //checkquads and trail
+                    if (CardStrengthLogic.CheckXnumCards(playerlist[i],4,GameName))
+                    {
+                        //Check ground card compatibility
+
+
+                        playerlist[i].ThrowCards();
+                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
+                        playerlist[i].ThrowCardList.Clear();
+                        //pick from deck or ground logic
+
+                    }
+                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 3, GameName))
+                    {
+                        playerlist[i].ThrowCards();
+                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
+                        playerlist[i].ThrowCardList.Clear();
+
+                    }
+                    else if ()
+                    {
+                        playerlist[i].ThrowCards();
+                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
+                        playerlist[i].ThrowCardList.Clear();
+
+                    }
+                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 2, GameName))
+                    {
+                        playerlist[i].ThrowCards();
+                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
+                        playerlist[i].ThrowCardList.Clear();
+
+                    }
                 }
             }
 
         }
-
         private void InitialCardInground()
         {
             List<Card> temp = new List<Card>();

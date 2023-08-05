@@ -88,7 +88,7 @@ namespace cards.Cards_files
         }
         public void Draw(Player.Player p,bool reveal=true)
         {
-            p.PickCard(TotalDeck[TotalDeck.Count-1],reveal);
+            p.PickSingleCard(TotalDeck[TotalDeck.Count-1],reveal);
             RemoveAt(TotalDeck.Count-1);
         }
     }

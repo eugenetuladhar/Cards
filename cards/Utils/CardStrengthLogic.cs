@@ -95,5 +95,71 @@ namespace cards.Utils
             }
             return false;
         }
+        public static bool CheckXnumCards(Player.Player p, int num,CardGameType game)
+        {
+            Dictionary<CardValue, int> countMap = new Dictionary<CardValue, int>();
+            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
+            {
+                if (p.cardsinInteger[j] == 1)
+                {
+                    p.cardsinInteger[j] = 14;
+                }
+            }
+            p.cardsinInteger.Sort();
+
+            // check same card types
+            for (int i = p.cardsinInteger.Count() - 1; i >= 0; i--)
+            {
+                // converting int to card
+                CardValue cv = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i]);
+                List<Card>? foundcardlist = p.CardInHand.FindAll(c => c.GetCardValue() == cv);
+
+                if (foundcardlist.Count() == num)
+                {
+                    foreach (var singlecard in foundcardlist)
+                    {
+                        if(game == CardGameType.KITTY)
+                        {
+                            p.MovetoFinalKittyHand(singlecard);
+                        }
+                        else if(game == CardGameType.DHUMBAL)
+                        {
+                            p.MovetoThrowCardList(singlecard);
+                        }
+                    }
+                    if (num == 2 && game==CardGameType.KITTY)
+                    {
+                        p.MovetoFinalKittyHand(p.CardInHand[0]);
+                    }
+                    return true;
+                }
+                //alternate way 
+
+                //foreach (var card in foundcardlist)
+                //{
+                //    if (countMap.ContainsKey(card.GetCardValue()))
+                //    {
+                //        countMap[card.GetCardValue()]++;
+                //        if (countMap[card.GetCardValue()] >= num)
+                //        {
+                //            foreach (var movingcard in p.CardInHand)
+                //            {
+                //                if (movingcard.GetCardValue() == card.GetCardValue())
+                //                {
+                //                    p.Remove(movingcard);
+                //                    p.FinalKittyHand.Add(movingcard);
+                //                }
+                //            }
+                //            return true;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        countMap[card.GetCardValue()] = 1;
+                //    }
+                //}
+            }
+            return false;
+        }
     }
 }

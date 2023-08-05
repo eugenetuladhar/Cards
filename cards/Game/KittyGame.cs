@@ -294,12 +294,12 @@ namespace cards.Game
                 {
                     playerlist[i].cardsinInteger = Cardlogiccs.GetCardIntegerValue(playerlist[i].CardInHand);
                     playerlist[i].cardsinInteger.Sort();
-                    if (CheckXnumCards(playerlist[i], 4))// checking quads
+                    if (CardStrengthLogic.CheckXnumCards(playerlist[i], 4,GameName))// checking quads
                     {
                         playerlist[i].kittyStrength.Add(CardStrength.Quad);
                         break;
                     }
-                    else if (CheckXnumCards(playerlist[i], 3)) // checking trial
+                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 3,GameName)) // checking trial
                     {
                         playerlist[i].kittyStrength.Add(CardStrength.Trial);
                     }
@@ -315,7 +315,7 @@ namespace cards.Game
                     {
                         playerlist[i].kittyStrength.Add(CardStrength.Color);
                     }
-                    else if (CheckXnumCards(playerlist[i], 2))
+                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 2,GameName))
                     {
                         playerlist[i].kittyStrength.Add(CardStrength.Double);
                     }
@@ -770,67 +770,6 @@ namespace cards.Game
             }
             return false;
         }
-
-        private bool CheckXnumCards(Player.Player p, int num)
-        {
-            Dictionary<CardValue, int> countMap = new Dictionary<CardValue, int>();
-            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
-            {
-                if (p.cardsinInteger[j] == 1)
-                {
-                    p.cardsinInteger[j] = 14;
-                }
-            }
-            p.cardsinInteger.Sort();
-
-            // check same card types
-            for (int i = p.cardsinInteger.Count() - 1; i >= 0; i--)
-            {
-                // converting int to card
-                CardValue cv = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i]);
-                List<Card>? foundcardlist = p.CardInHand.FindAll(c => c.GetCardValue() == cv);
-
-                if (foundcardlist.Count() == num)
-                {
-                    foreach (var singlecard in foundcardlist)
-                    {
-                        p.MovetoFinalKittyHand(singlecard);
-                    }
-                    if (num == 2)
-                    {
-                        p.MovetoFinalKittyHand(p.CardInHand[0]);
-                    }
-                    return true;
-                }
-                //alternate way 
-
-                //foreach (var card in foundcardlist)
-                //{
-                //    if (countMap.ContainsKey(card.GetCardValue()))
-                //    {
-                //        countMap[card.GetCardValue()]++;
-                //        if (countMap[card.GetCardValue()] >= num)
-                //        {
-                //            foreach (var movingcard in p.CardInHand)
-                //            {
-                //                if (movingcard.GetCardValue() == card.GetCardValue())
-                //                {
-                //                    p.Remove(movingcard);
-                //                    p.FinalKittyHand.Add(movingcard);
-                //                }
-                //            }
-                //            return true;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        countMap[card.GetCardValue()] = 1;
-                //    }
-                //}
-            }
-            return false;
-        }
-
         private void Deal(List<Player.Player> list, CardCompleteDeck c)
         {
             Cardlogiccs.Deal(list, c, NUM_CARDS_TO_DEAL, false);
