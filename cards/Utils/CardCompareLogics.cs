@@ -177,25 +177,27 @@ namespace cards.Utils
 
         private static bool CompareColor(Player.Player player1, Player.Player player2)
         {
+            player1.cardsinInteger.Sort();
+            player2.cardsinInteger.Sort();
             if (player1.strength == CardStrength.Color && player2.strength == CardStrength.Color)
             {
-                if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] == player2.cardsinInteger[1])
+                if (player1.cardsinInteger[2] == player2.cardsinInteger[2] && player1.cardsinInteger[1] == player2.cardsinInteger[1])
                 {
-                    if (player1.cardsinInteger[2] == player2.cardsinInteger[2])
+                    if (player1.cardsinInteger[0] == player2.cardsinInteger[0])
                     {
                         player1.result = CardResult.DRAW;
                         player2.result = CardResult.DRAW;
                         Winnerlist.Add(player1);
                         Winnerlist.Add(player2);
                     }
-                    if (player1.cardsinInteger[2] > player2.cardsinInteger[2])
+                    if (player1.cardsinInteger[0] > player2.cardsinInteger[0])
                     {
                         player1.result = CardResult.WIN;
                         player2.result = CardResult.LOSE;
                         Winnerlist.Clear();
                         Winnerlist.Add(player1);
                     }
-                    if (player1.cardsinInteger[2] < player2.cardsinInteger[2])
+                    if (player1.cardsinInteger[0] < player2.cardsinInteger[0])
                     {
                         player2.result = CardResult.WIN;
                         player1.result = CardResult.LOSE;
@@ -204,28 +206,34 @@ namespace cards.Utils
                     }
                     return true;
                 }
-                if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] > player2.cardsinInteger[1])
+                if (player1.cardsinInteger[2] == player2.cardsinInteger[2])
+                {
+                    if (player1.cardsinInteger[1] > player2.cardsinInteger[1])
+                    {
+                        player1.result = CardResult.WIN;
+                        player2.result = CardResult.LOSE;
+                        Winnerlist.Clear();
+                        Winnerlist.Add(player1);
+                    }
+
+                    if (player1.cardsinInteger[1] < player2.cardsinInteger[1])
+                    {
+                        player2.result = CardResult.WIN;
+                        player1.result = CardResult.LOSE;
+                        Winnerlist.Clear();
+                        Winnerlist.Add(player2);
+                    }
+                    return true;
+                }
+                
+                if (player1.cardsinInteger[2] > player2.cardsinInteger[2])
                 {
                     player1.result = CardResult.WIN;
                     player2.result = CardResult.LOSE;
                     Winnerlist.Clear();
                     Winnerlist.Add(player1);
                 }
-                if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] < player2.cardsinInteger[1])
-                {
-                    player2.result = CardResult.WIN;
-                    player1.result = CardResult.LOSE;
-                    Winnerlist.Clear();
-                    Winnerlist.Add(player2);
-                }
-                if (player1.cardsinInteger[0] > player2.cardsinInteger[0])
-                {
-                    player1.result = CardResult.WIN;
-                    player2.result = CardResult.LOSE;
-                    Winnerlist.Clear();
-                    Winnerlist.Add(player1);
-                }
-                if (player1.cardsinInteger[0] < player2.cardsinInteger[0])
+                else if (player1.cardsinInteger[2] < player2.cardsinInteger[2])
                 {
                     player2.result = CardResult.WIN;
                     player1.result = CardResult.LOSE;

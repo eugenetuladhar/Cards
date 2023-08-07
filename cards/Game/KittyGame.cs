@@ -52,9 +52,9 @@ namespace cards.Game
             //b.Add(new Card(CardType.Heart, CardValue.Seven));
             //b.Add(new Card(CardType.Heart, CardValue.Six));
             //b.Add(new Card(CardType.Heart, CardValue.Five));
-            //b.Add(new Card(CardType.Diamond, CardValue.Ten));
-            //b.Add(new Card(CardType.Club, CardValue.Jacks));
-            //b.Add(new Card(CardType.Diamond, CardValue.Queen));
+            //b.Add(new Card(CardType.Diamond, CardValue.Six));
+            //b.Add(new Card(CardType.Diamond, CardValue.Two));
+            //b.Add(new Card(CardType.Diamond, CardValue.King));
             //playerlist[0].DisplayeCardInHand();
             //b = Cardlogiccs.SwapPositionofCards(b, 0, 1);
             //playerlist[0].DisplayeCardInHand();
@@ -63,15 +63,15 @@ namespace cards.Game
 
             //var c = playerlist[1].CardInHand;
             //c.Clear();
-            //c.Add(new Card(CardType.Spade, CardValue.Jacks));
-            //c.Add(new Card(CardType.Spade, CardValue.Nine));
-            //c.Add(new Card(CardType.Spade, CardValue.Ten));
-            //c.Add(new Card(CardType.Diamond, CardValue.Six));
-            //c.Add(new Card(CardType.Diamond, CardValue.Two));
-            //c.Add(new Card(CardType.Diamond, CardValue.King));
-            //c.Add(new Card(CardType.Spade, CardValue.Five));
-            //c.Add(new Card(CardType.Club, CardValue.Two));
-            //c.Add(new Card(CardType.Club, CardValue.Three));
+            //c.Add(new Card(CardType.Spade, CardValue.Ace));
+            //c.Add(new Card(CardType.Spade, CardValue.King));
+            //c.Add(new Card(CardType.Spade, CardValue.Queen));
+            //c.Add(new Card(CardType.Club, CardValue.Six));
+            //c.Add(new Card(CardType.Club, CardValue.Five));
+            //c.Add(new Card(CardType.Spade, CardValue.Four));
+            //c.Add(new Card(CardType.Heart, CardValue.Nine));
+            //c.Add(new Card(CardType.Heart, CardValue.Eight));
+            //c.Add(new Card(CardType.Heart, CardValue.Two));
             //var a = playerlist[2].CardInHand;
             //a.Clear();
             //a.Add(new Card(CardType.Heart, CardValue.Nine));
@@ -84,7 +84,6 @@ namespace cards.Game
             //a.Add(new Card(CardType.Heart, CardValue.Five));
             //a.Add(new Card(CardType.Club, CardValue.Four));
             //Cardlogiccs.ShowAllPlayersCard(playerlist);
-
 
             //start game
             StartPlaying(playerlist);
@@ -250,6 +249,7 @@ namespace cards.Game
                         quadwinner = item.Value.GetName;
                     }
                 }
+                Cardlogiccs.ShowAllPlayersCard(playerlist);
                 Console.WriteLine($" ******* The Winner of this game is {quadwinner} with Quads!! ******* ");
                 IsKitty = false;
             }
@@ -338,7 +338,7 @@ namespace cards.Game
             bool finalform = false;
             string value = "";
 
-            ConsoleKeyInfo keyInfo;// test
+            ConsoleKeyInfo keyInfo;
             int gapSize = 0;
             bool move = false;
             string symbol = "\u2191";
