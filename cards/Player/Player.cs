@@ -93,7 +93,6 @@ namespace cards.Player
         }
         public void MovetoThrowCardList(Card card)
         {
-            Remove(card);
             ThrowCardList.Add(card);
         }
         public void Reset()
@@ -169,6 +168,35 @@ namespace cards.Player
                     CardInHand.RemoveAt(i);
                 }
             }
+        }
+        public bool HaveCard(Card card)
+        {
+            return HaveCard(card.GetCardType(), card.GetCardValue());
+        }
+        public bool HaveCard(CardType cardType, CardValue cardvalue)
+        {
+            bool have = false;
+            for (int i = 0; i < CardInHand.Count(); i++)
+            {
+                if (cardType == CardInHand[i].GetCardType() &&
+                    cardvalue == CardInHand[i].GetCardValue())
+                {
+                    have = true;
+                }
+            }
+            return have;
+        }
+        public bool HaveCardValue(CardValue cardValue)
+        {
+            bool have = false;
+            for (int i = 0; i < CardInHand.Count(); i++)
+            {
+                if (cardValue == CardInHand[i].GetCardValue())
+                {
+                    have = true;
+                }
+            }
+            return have;
         }
     }
 }

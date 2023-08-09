@@ -62,10 +62,10 @@ namespace cards.Game
                 {
                     continue;
                 }
-                else  if (Cardlogiccs.GetTotalIntegerValue(Finisher.CardInHand)<=
-                    Cardlogiccs.GetTotalIntegerValue(player.CardInHand)) 
+                else if (Cardlogiccs.GetTotalIntegerValue(Finisher.CardInHand) <=
+                    Cardlogiccs.GetTotalIntegerValue(player.CardInHand))
                 {
-                    Finisher= player;
+                    Finisher = player;
                 }
                 else
                 {
@@ -92,7 +92,7 @@ namespace cards.Game
             int gapSize = 0;
             bool move = false;
             string symbol = "\u2191";
-            
+
             bool menu = true;
             while (menu)
             {
@@ -136,11 +136,11 @@ namespace cards.Game
                 }
                 else if (keyInfo.Key == ConsoleKey.X)
                 {
-                    if(Cardlogiccs.GetTotalIntegerValue(HumanPlayer.CardInHand)<6)
+                    if (Cardlogiccs.GetTotalIntegerValue(HumanPlayer.CardInHand) < 6)
                     {
                         //determinewinner
                         Finisher = HumanPlayer;
-                        gamecomplete= true;
+                        gamecomplete = true;
                         menu = false;
                     }
                     else
@@ -168,7 +168,7 @@ namespace cards.Game
                     HumanPlayer.ShowPickThrowMessage(cardtothrow, THROW);
 
                     // pick from ground or deck
-                    Console.Write( " Pick from: DECK ");
+                    Console.Write(" Pick from: DECK ");
                     foreach (var singlecard in currentcardsonground)
                     {
                         Console.Write("or");
@@ -184,7 +184,7 @@ namespace cards.Game
                     while (!pickcomplete)
                     {
                         keyInfo = Console.ReadKey(true);
-                        
+
                         if (keyInfo.Key == ConsoleKey.LeftArrow && gapSize > 0)
                         {
                             gapSize--;
@@ -245,7 +245,8 @@ namespace cards.Game
                                 pickcomplete = true;
                                 carddeck.Draw(HumanPlayer);
                                 Console.ReadLine();
-                            }else if(gapSize == 1)
+                            }
+                            else if (gapSize == 1)
                             {
                                 Console.WriteLine(" Pick from Ground");
                                 HumanPlayer.PickSingleCard(currentcardsonground[0]);
@@ -293,7 +294,7 @@ namespace cards.Game
             Console.WriteLine("********* GROUND **********");
             Console.WriteLine();
             Console.Write("        ");
-            foreach (var card in CardsOnGround[CardsOnGround.Count()-1])
+            foreach (var card in CardsOnGround[CardsOnGround.Count() - 1])
             {
                 Cardlogiccs.PrintCard(card);
             }
@@ -316,7 +317,7 @@ namespace cards.Game
                 for (int i = 1; i < playerlist.Count(); i++)
                 {
                     //cpu player turn
-                    if (Cardlogiccs.GetTotalIntegerValue(playerlist[i].CardInHand)<6)
+                    if (Cardlogiccs.GetTotalIntegerValue(playerlist[i].CardInHand) < 6)
                     {
                         Finisher = playerlist[i];
                         gamecomplete = true; break;
@@ -328,54 +329,141 @@ namespace cards.Game
                     //checkquads and trail
                     if (CardStrengthLogic.CheckColorRunCards(playerlist[i], 5, GameName))
                     {
-                        playerlist[i].ThrowCards();
-                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
-                        playerlist[i].ThrowCardList.Clear();
-
                     }
-                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i],4,GameName))
+                    else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 4, GameName))
                     {
-                        //Check ground card compatibility
-
-
-                        playerlist[i].ThrowCards();
-                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
-                        playerlist[i].ThrowCardList.Clear();
-                        //pick from deck or ground logic
-
                     }
                     else if (CardStrengthLogic.CheckColorRunCards(playerlist[i], 4, GameName))
                     {
-                        playerlist[i].ThrowCards();
-                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
-                        playerlist[i].ThrowCardList.Clear();
-
+                        
                     }
                     else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 3, GameName))
                     {
-                        playerlist[i].ThrowCards();
-                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
-                        playerlist[i].ThrowCardList.Clear();
-
+                        
                     }
-                    else if (CardStrengthLogic.CheckColorRunCards(playerlist[i],3,GameName))
+                    else if (CardStrengthLogic.CheckColorRunCards(playerlist[i], 3, GameName))
                     {
-                        playerlist[i].ThrowCards();
-                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
-                        playerlist[i].ThrowCardList.Clear();
-
+                        
                     }
                     else if (CardStrengthLogic.CheckXnumCards(playerlist[i], 2, GameName))
                     {
-                        playerlist[i].ThrowCards();
-                        Cardlogiccs.CardInGroundThrowLogic(playerlist[i].ThrowCardList, CardsOnGround);
-                        playerlist[i].ThrowCardList.Clear();
 
                     }
+                    else
+                    {
+                        int maximumnum = playerlist[i].cardsinInteger.Max();
+                        var maximumnumcard = playerlist[i].CardInHand.FirstOrDefault(c=>c.GetCardValue()==CardConversion.ConversionIntegertoValue(maximumnum);
+                        playerlist[i].ThrowCardList.Add(maximumnumcard);
+                    }
+                    HandleCPUpickthrow(playerlist[i]);
+                }
+            }
+        }
+
+        private void HandleCPUpickthrow(Player.Player player)
+        {
+            List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
+
+            player.ThrowCards();
+            //Check ground card compatibility
+            if (!CheckPickfromGroundorDeck(player, currentcardsonground))
+            {//pick from ground
+                carddeck.Draw(player);
+            }
+            Cardlogiccs.CardInGroundThrowLogic(player.ThrowCardList, CardsOnGround);// add cards on ground
+            player.ThrowCardList.Clear();
+        }
+
+        private bool CheckPickfromGroundorDeck(Player.Player player, List<Card> currentcardsonground)
+        {
+            foreach (var card in currentcardsonground)
+            {
+                if (player.HaveCardValue(card.GetCardValue()))
+                {
+                    player.PickSingleCard(card);
+                    return true;
+                }
+                else if (Compatiblecolorrun(player, card))
+                {
+                    player.PickSingleCard(card);
+                    return true;
+                }
+                else if ((Cardlogiccs.GetTotalIntegerValue(player.CardInHand) + CardConversion.ConversionValuetoInteger(card.GetCardValue())) < 6)
+                {
+                    player.PickSingleCard(card);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool Compatiblecolorrun(Player.Player player, Card card)
+        {
+
+            if (CardConversion.ConversionValuetoInteger(card.GetCardValue()) > 2 &&
+                CardConversion.ConversionValuetoInteger(card.GetCardValue()) < 12)
+            {
+                int cardvalueint = CardConversion.ConversionValuetoInteger(card.GetCardValue());
+                int previousvalueint = cardvalueint - 1;
+                int prepreviousvalueint = cardvalueint - 2;
+                int nextvalueint = cardvalueint + 1;
+                int nextnextvalueint = cardvalueint + 2;
+                if (player.HaveCard(card.GetCardType(), CardConversion.ConversionIntegertoValue(previousvalueint)) &&
+                    player.HaveCard(card.GetCardType(), CardConversion.ConversionIntegertoValue(prepreviousvalueint)))
+                {
+                    return true;
+                }
+                else if (player.HaveCard(card.GetCardType(), CardConversion.ConversionIntegertoValue(previousvalueint)) &&
+                    player.HaveCard(card.GetCardType(), CardConversion.ConversionIntegertoValue(nextvalueint)))
+                {
+                    return true;
+                }
+                else if (player.HaveCard(card.GetCardType(), CardConversion.ConversionIntegertoValue(nextvalueint)) &&
+                    player.HaveCard(card.GetCardType(), CardConversion.ConversionIntegertoValue(nextnextvalueint)))
+                {
+                    return true;
+                }
+            }
+            if (card.GetCardValue() == CardValue.Two)
+            {
+                if (player.HaveCard(card.GetCardType(), CardValue.Ace) && player.HaveCard(card.GetCardType(), CardValue.Three))
+                {
+                    return true;
+                }
+                if (player.HaveCard(card.GetCardType(), CardValue.Four) && player.HaveCard(card.GetCardType(), CardValue.Three))
+                {
+                    return true;
+                }
+            }
+            if (card.GetCardValue() == CardValue.Ace)
+            {
+                if (player.HaveCard(card.GetCardType(), CardValue.Two) && player.HaveCard(card.GetCardType(), CardValue.Three))
+                {
+                    return true;
+                }
+            }
+            if (card.GetCardValue() == CardValue.Queen)
+            {
+                if (player.HaveCard(card.GetCardType(), CardValue.King) && player.HaveCard(card.GetCardType(), CardValue.Jacks))
+                {
+                    return true;
+                }
+                if (player.HaveCard(card.GetCardType(), CardValue.Jacks) && player.HaveCard(card.GetCardType(), CardValue.Ten))
+                {
+                    return true;
+                }
+            }
+            if (card.GetCardValue() == CardValue.King)
+            {
+                if (player.HaveCard(card.GetCardType(), CardValue.Queen) && player.HaveCard(card.GetCardType(), CardValue.Jacks))
+                {
+                    return true;
                 }
             }
 
+            return false;
         }
+
         private void InitialCardInground()
         {
             List<Card> temp = new List<Card>();

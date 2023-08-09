@@ -46,13 +46,17 @@ namespace cards.Cards_files
         }
         public bool HaveCard(Card card)
         {
+            return HaveCard(card.GetCardType(),card.GetCardValue());
+        }
+        public bool HaveCard(CardType cardType,CardValue cardvalue)
+        {
             bool have = false;
             for (int i = 0; i < TotalDeck.Count(); i++)
             {
-                if (card.GetCardType() == TotalDeck[i].GetCardType() &&
-                    card.GetCardValue() == TotalDeck[i].GetCardValue())
+                if (cardType == TotalDeck[i].GetCardType() &&
+                    cardvalue == TotalDeck[i].GetCardValue())
                 {
-                    have= true;
+                    have = true;
                 }
             }
             return have;

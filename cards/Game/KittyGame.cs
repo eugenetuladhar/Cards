@@ -538,7 +538,7 @@ namespace cards.Game
 
         private bool CheckRunCards(Player.Player p)
         {
-            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
+            for (int j = 0; j < p.cardsinInteger.Count; j++)//Ace to 1 value
             {
                 if (p.cardsinInteger[j] == 14)
                 {
