@@ -96,10 +96,104 @@ namespace cards.Utils
             }
             return false;
         }
+        public static bool CheckColorRunCards(List<Card> cardlista)
+        {
+            if (cardlista.Count < 3)// for run should be greater than 2
+            {
+                return false;
+            }
+            Dictionary<CardType, List<CardValue>> colorMap = new();
+            // check all cards same color or not
+            for (int i = 0; i < cardlista.Count - 1; i++)
+            {
+                if (i == 0)
+                {
+                    colorMap.Add(cardlista[0].GetCardType(), new List<CardValue> { cardlista[0].GetCardValue() });
+                    continue;
+                }
+                if (cardlista[i].GetCardType() == cardlista[i - 1].GetCardType())
+                {
+                    colorMap[cardlista[i].GetCardType()].Add(cardlista[i].GetCardValue());
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            // find run in  card
+            List<int> cardlistint = new List<int>();
+            // convert to integer
+            foreach (var singlecard in cardlista)
+            {
+                cardlistint.Add(CardConversion.ConversionValuetoInteger(singlecard.GetCardValue()));
+            }
+            cardlistint.Sort();
+           
+            if (cardlistint.Count == 3)
+            {
+                
+                // check KQA
+                if (cardlistint.Contains(1) && cardlistint.Contains(12) &&
+                    cardlistint.Contains(13))
+                {
+
+                    return true;
+                }
+                
+            }
+            else if (cardlistint.Count == 4)
+            {
+                if (cardlistint.Contains(1) && cardlistint.Contains(12) &&
+                    cardlistint.Contains(13) &&
+                    cardlistint.Contains(11))
+                {
+
+                    return true;
+                }
+            }
+            else if (cardlistint.Count == 5)
+            {
+                if (cardlistint.Contains(1) && cardlistint.Contains(12) &&
+                    cardlistint.Contains(13) &&
+                    cardlistint.Contains(11) && cardlistint.Contains(10))
+                {
+
+                    return true;
+                }
+            }
+            int runcards = 0;
+            for (int i = 1; i < cardlistint.Count - 1; i++)
+            {
+                if (cardlistint[i] == cardlistint[i - 1] + 1)
+                {
+                    runcards++;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            if (runcards == cardlistint.Count - 1)
+            {
+                return true;
+            }
+            return false;
+        }
+        public static bool CheckXnumCards(List<Card> cardlist)// returns true if list has double or trail or quads
+        {
+            for (int i = 1; i < cardlist.Count-1; i++)
+            {
+                if (cardlist[i] != cardlist[i-1])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
         public static bool CheckXnumCards(Player.Player p, int num, CardGameType game)
         {
-            Dictionary<CardValue, int> countMap = new Dictionary<CardValue, int>();
-            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
+            for (int j = 0; j < p.cardsinInteger.Count; j++)//Ace to 14 value
             {
                 if (p.cardsinInteger[j] == 1)
                 {
@@ -109,13 +203,13 @@ namespace cards.Utils
             p.cardsinInteger.Sort();
 
             // check same card types
-            for (int i = p.cardsinInteger.Count() - 1; i >= 0; i--)
+            for (int i = p.cardsinInteger.Count - 1; i >= 0; i--)
             {
                 // converting int to card
                 CardValue cv = CardConversion.ConversionIntegertoValue(p.cardsinInteger[i]);
                 List<Card>? foundcardlist = p.CardInHand.FindAll(c => c.GetCardValue() == cv);
 
-                if (foundcardlist.Count() == num)
+                if (foundcardlist.Count == num)
                 {
                     foreach (var singlecard in foundcardlist)
                     {
@@ -139,7 +233,7 @@ namespace cards.Utils
         }
         public static bool CheckColorRunCards(Player.Player p, int number, CardGameType game)
         {
-            for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 1 value
+            for (int j = 0; j < p.cardsinInteger.Count; j++)//Ace to 1 value
             {
                 if (p.cardsinInteger[j] == 14)
                 {
@@ -234,7 +328,7 @@ namespace cards.Utils
                     }
 
                     // check for other runs
-                    for (int i = cardlistint.Count() - (number-1); i > 0; i--)
+                    for (int i = cardlistint.Count() - (number - 1); i > 0; i--)
                     {
                         if (number == 3)
                         {
