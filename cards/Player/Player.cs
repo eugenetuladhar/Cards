@@ -122,7 +122,7 @@ namespace cards.Player
             }
             else if(pickorthrow==false&&reveal==true)
             {
-                Console.Write($"****{Name} {hashave} picked");
+                Console.Write($"****{Name} {hashave} thrown");
                 Cardlogiccs.PrintCard(card);
                 Console.Write("****");
             }

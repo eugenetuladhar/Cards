@@ -72,6 +72,8 @@ namespace cards.Game
                     Console.WriteLine("problem in winner dermining process");
                 }
             }
+            Console.WriteLine(Finisher.GetName);
+            Console.ReadLine();
         }
 
         private void Deal()
@@ -189,8 +191,11 @@ namespace cards.Game
 
                         //extralogic
                         Cardlogiccs.CardInGroundThrowLogic(HumanPlayer.ThrowCardList, CardsOnGround);
+                        foreach (var card in HumanPlayer.ThrowCardList)
+                        {
+                            HumanPlayer.ShowPickThrowMessage(card, THROW);
+                        }
                         HumanPlayer.ThrowCardList.Clear();
-                        ////HumanPlayer.ShowPickThrowMessage(cardtothrow, THROW);
 
                         // pick from ground or deck
                         Console.Write(" Pick from: DECK ");
@@ -386,15 +391,22 @@ namespace cards.Game
                     }
                     else
                     {
+                        for (int j = 0; j < playerlist[i].cardsinInteger.Count; j++)//Ace to 1 value
+                        {
+                            if (playerlist[i].cardsinInteger[j] == 14)
+                            {
+                                playerlist[i].cardsinInteger[j] = 1;
+                            }
+                        }
                         int maximumnum = playerlist[i].cardsinInteger.Max();
                         var maximumnumcard = playerlist[i].CardInHand.FirstOrDefault(c => c.GetCardValue() == CardConversion.ConversionIntegertoValue(maximumnum));
                         playerlist[i].ThrowCardList.Add(maximumnumcard);
                     }
                     HandleCPUpickthrow(playerlist[i]);
+                    Thread.Sleep(2000);
                 }
             }
         }
-
         private void HandleCPUpickthrow(Player.Player player)
         {
             List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];

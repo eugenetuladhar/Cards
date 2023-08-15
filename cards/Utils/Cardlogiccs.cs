@@ -130,7 +130,12 @@ namespace cards.Utils
         }
         public static void CardInGroundThrowLogic(List<Card> cards, List<List<Card>> cardonground)
         {
-            cardonground.Add(cards);
+            List<Card> cardlist = new();
+            foreach (var item in cards)
+            {
+                cardlist.Add(item);
+            }
+            cardonground.Add(cardlist);
         }
         public static void CardInGroundPickLogic(Card card, List<List<Card>> cardonground)
         {
