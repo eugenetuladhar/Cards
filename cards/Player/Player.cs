@@ -40,16 +40,6 @@ namespace cards.Player
             foreach (Card card in CardInHand)
             {
                 Cardlogiccs.PrintCard(card);
-                //if(card.GetCardType()==CardType.Diamond|| card.GetCardType() == CardType.Heart)
-                //{
-                //    Console.ForegroundColor = ConsoleColor.Red;
-                //    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
-                //}
-                //else
-                //{
-                //    Console.Write(" " + CardConversion.GetPrintedForm(card) + " ");
-                //}
-                //Console.ResetColor();
             }
             Console.WriteLine();
         }

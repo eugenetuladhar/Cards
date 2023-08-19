@@ -1,9 +1,11 @@
 ﻿using cards.Cards_files;
 using cards.Interface;
+using cards.Player;
 using cards.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +23,7 @@ namespace cards.Game
         private bool THROW = false;
         private Player.Player Finisher { get; set; }
         List<Player.Player> playerlist;
+        List<string> Dhumballog= new List<string>();
         public DhumbalGame()
         {
             carddeck = new CardCompleteDeck();
@@ -80,10 +83,10 @@ namespace cards.Game
         {
             Cardlogiccs.Deal(playerlist, carddeck, NUM_CARDS_TO_DEAL, false);
             // display pick and throw cards
-            foreach (var p in playerlist)
-            {
-                p.TurnONOFFpickthrowMessage = true;
-            }
+            //foreach (var p in playerlist)
+            //{
+            //    p.TurnONOFFpickthrowMessage = true;
+            //}
         }
         private void HumanPlayerLogic(Player.Player HumanPlayer)
         {
@@ -100,6 +103,7 @@ namespace cards.Game
             {
                 Console.Clear();
                 Console.WriteLine("Your turn");
+                DhumbalLogAdd("** Your turn **");
                 ShowGround();
                 List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
                 Console.WriteLine();
@@ -109,6 +113,7 @@ namespace cards.Game
                 string gap = new string(' ', gapSize);
                 string formattedText = gap + gap + gap + gap + gap + symbol;
                 Console.WriteLine("      {0}", formattedText);
+                ShowDhumbalLog();
 
                 if (HumanPlayer.ThrowCardList.Count > 0) // display throw card list
                 {
@@ -191,10 +196,8 @@ namespace cards.Game
 
                         //extralogic
                         Cardlogiccs.CardInGroundThrowLogic(HumanPlayer.ThrowCardList, CardsOnGround);
-                        foreach (var card in HumanPlayer.ThrowCardList)
-                        {
-                            HumanPlayer.ShowPickThrowMessage(card, THROW);
-                        }
+                        DhumbalLogAddThrowlist(HumanPlayer);
+                        ShowDhumbalLog();
                         HumanPlayer.ThrowCardList.Clear();
 
                         // pick from ground or deck
@@ -227,7 +230,7 @@ namespace cards.Game
                                 HumanPlayer.DisplayeCardInHand();
                                 Console.WriteLine();
 
-                                Console.Write(" Pick from: DECK ");
+                                Console.Write("Pick from: DECK ");
                                 foreach (var singlecard in currentcardsonground)
                                 {
                                     Console.Write("or");
@@ -240,6 +243,7 @@ namespace cards.Game
                                 Console.WriteLine("             {0}", formattedText1);
 
                                 Console.WriteLine($"left arrow {gapSize}");
+                                ShowDhumbalLog();
                             }
                             else if (keyInfo.Key == ConsoleKey.RightArrow && gapSize < currentcardsonground.Count())
                             {
@@ -265,20 +269,20 @@ namespace cards.Game
                                 formattedText1 = gap + gap + gap + gap + gap + gap + gap + symbol;
                                 Console.WriteLine("             {0}", formattedText1);
 
-                                Console.WriteLine($"right arrow {gapSize}");
+                                ShowDhumbalLog();
                             }
                             else if (keyInfo.Key == ConsoleKey.Enter)
                             {
                                 if (gapSize == 0)
                                 {
-                                    Console.WriteLine(" Pick from Deck");
+                                    DhumbalLogAdd("** You Picked from Deck **");
                                     pickcomplete = true;
                                     carddeck.Draw(HumanPlayer);
                                     Console.ReadLine();
                                 }
                                 else if (gapSize == 1)
                                 {
-                                    Console.WriteLine(" Pick from Ground");
+                                    DhumbalLogAdd("** You Picked from Ground **");
                                     HumanPlayer.PickSingleCard(currentcardsonground[0]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[0], CardsOnGround);
                                     pickcomplete = true;
@@ -286,7 +290,7 @@ namespace cards.Game
                                 }
                                 else if (gapSize == 2)
                                 {
-                                    Console.WriteLine(" Pick from Ground");
+                                    DhumbalLogAdd("** You Picked from Ground **");
                                     HumanPlayer.PickSingleCard(currentcardsonground[1]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[1], CardsOnGround);
                                     pickcomplete = true;
@@ -294,7 +298,7 @@ namespace cards.Game
                                 }
                                 else if (gapSize == 3)
                                 {
-                                    Console.WriteLine(" Pick from Ground");
+                                    DhumbalLogAdd("** You Picked from Ground **");
                                     HumanPlayer.PickSingleCard(currentcardsonground[2]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[2], CardsOnGround);
                                     pickcomplete = true;
@@ -302,7 +306,7 @@ namespace cards.Game
                                 }
                                 else if (gapSize == 4)
                                 {
-                                    Console.WriteLine(" Pick from Ground");
+                                    DhumbalLogAdd("** You Picked from Ground **");
                                     HumanPlayer.PickSingleCard(currentcardsonground[3]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[3], CardsOnGround);
                                     pickcomplete = true;
@@ -356,6 +360,7 @@ namespace cards.Game
                 // comp player
                 for (int i = 1; i < playerlist.Count(); i++)
                 {
+                    DhumbalLogAdd($"** {playerlist[i].GetName}'s turn **");
                     //cpu player turn
                     if (Cardlogiccs.GetTotalIntegerValue(playerlist[i].CardInHand) < 6)
                     {
@@ -403,19 +408,19 @@ namespace cards.Game
                         playerlist[i].ThrowCardList.Add(maximumnumcard);
                     }
                     HandleCPUpickthrow(playerlist[i]);
-                    Thread.Sleep(2000);
                 }
             }
         }
         private void HandleCPUpickthrow(Player.Player player)
         {
             List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
-
+            DhumbalLogAddThrowlist(player);
             player.ThrowCards();
             //Check ground card compatibility
             if (!CheckPickfromGroundorDeck(player, currentcardsonground))
             {//pick from ground
                 carddeck.Draw(player);
+                DhumbalLogAdd($"** {player.GetName} Picked from Deck **");
             }
             Cardlogiccs.CardInGroundThrowLogic(player.ThrowCardList, CardsOnGround);// add cards on ground
             player.ThrowCardList.Clear();
@@ -428,15 +433,18 @@ namespace cards.Game
                 if (player.HaveCardValue(card.GetCardValue()))
                 {
                     player.PickSingleCard(card);
+                    DhumbalLogAdd($"** {player.GetName} Picked from Ground **");
                     return true;
                 }
                 else if (Compatiblecolorrun(player, card))
                 {
+                    DhumbalLogAdd($"** {player.GetName} Picked from Ground **");
                     player.PickSingleCard(card);
                     return true;
                 }
                 else if ((Cardlogiccs.GetTotalIntegerValue(player.CardInHand) + CardConversion.ConversionValuetoInteger(card.GetCardValue())) < 6)
                 {
+                    DhumbalLogAdd($"** {player.GetName} Picked from Ground **");
                     player.PickSingleCard(card);
                     return true;
                 }
@@ -510,7 +518,53 @@ namespace cards.Game
 
             return false;
         }
+        private void ShowDhumbalLog()
+        {
+            Console.WriteLine("** EventLog **");
+            Console.WriteLine("--------------");
+            int count = 0;
+            for (int i = Dhumballog.Count-1; i >= 0; i--)
+            {
+                Console.WriteLine(Dhumballog[i]);
+                count++;
+                if (count > 10)
+                {
+                    break;
+                }
+            }
+            Console.WriteLine("--------------");
 
+        }
+        private void DhumbalLogAdd(string line)
+        {
+            if (Dhumballog.Count > 0)
+            {
+                if (Dhumballog[Dhumballog.Count - 1] != line)
+                {
+                    Dhumballog.Add(line);
+                }
+            }
+            else
+            {
+                Dhumballog.Add(line);
+            }
+        }
+        private void DhumbalLogAddThrowlist(Player.Player player)
+        {
+            string message = $"** {player.GetName} has thrown ";
+            foreach (var card in player.ThrowCardList)
+            {
+                if (player.ThrowCardList[0] == card)
+                {
+                    message += $"{card.GetCardType()}{card.GetCardValue()}";
+                }
+                else
+                {
+                    message += $" and {card.GetCardType()}{card.GetCardValue()}";
+                }
+            }
+            DhumbalLogAdd(message + " **");
+        }
         private void InitialCardInground()
         {
             List<Card> temp = new List<Card>();
