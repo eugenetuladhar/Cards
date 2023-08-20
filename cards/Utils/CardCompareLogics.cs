@@ -267,14 +267,32 @@ namespace cards.Utils
 
         private static bool CompareSequence(Player.Player player1, Player.Player player2)
         {
+            
             if (player1.strength == CardStrength.Sequence && player2.strength == CardStrength.Sequence)
             {
                 if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] == player2.cardsinInteger[1])
                 {
-                    player1.result = CardResult.DRAW;
-                    player2.result = CardResult.DRAW;
-                    Winnerlist.Add(player1);
-                    Winnerlist.Add(player2);
+                    if (player1.cardsinInteger[2] == player2.cardsinInteger[2])
+                    {
+                        player1.result = CardResult.DRAW;
+                        player2.result = CardResult.DRAW;
+                        Winnerlist.Add(player1);
+                        Winnerlist.Add(player2);
+                    }
+                    else if (player1.cardsinInteger[2] > player2.cardsinInteger[2])
+                    {
+                        player1.result = CardResult.WIN;
+                        player2.result = CardResult.LOSE;
+                        Winnerlist.Clear();
+                        Winnerlist.Add(player1);
+                    }
+                    else if (player1.cardsinInteger[2] < player2.cardsinInteger[2])
+                    {
+                        player1.result = CardResult.LOSE;
+                        player2.result = CardResult.WIN;
+                        Winnerlist.Clear();
+                        Winnerlist.Add(player2);
+                    }
                 }
                 if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] > player2.cardsinInteger[1])
                 {
@@ -331,14 +349,33 @@ namespace cards.Utils
 
         private static bool CompareColorSequence(Player.Player player1, Player.Player player2)
         {
+            player1.cardsinInteger.Sort();
+            player2.cardsinInteger.Sort();
             if (player1.strength == CardStrength.ColorSequence && player2.strength == CardStrength.ColorSequence)
             {
                 if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] == player2.cardsinInteger[1])
                 {
-                    player1.result = CardResult.DRAW;
-                    player2.result = CardResult.DRAW;
-                    Winnerlist.Add(player1);
-                    Winnerlist.Add(player2);
+                    if (player1.cardsinInteger[2] == player2.cardsinInteger[2])
+                    {
+                        player1.result = CardResult.DRAW;
+                        player2.result = CardResult.DRAW;
+                        Winnerlist.Add(player1);
+                        Winnerlist.Add(player2);
+                    }
+                    else if (player1.cardsinInteger[2] > player2.cardsinInteger[2])
+                    {
+                        player1.result = CardResult.WIN;
+                        player2.result = CardResult.LOSE;
+                        Winnerlist.Clear();
+                        Winnerlist.Add(player1);
+                    }
+                    else if (player1.cardsinInteger[2] < player2.cardsinInteger[2])
+                    {
+                        player1.result = CardResult.LOSE;
+                        player2.result = CardResult.WIN;
+                        Winnerlist.Clear();
+                        Winnerlist.Add(player2);
+                    }
                 }
                 if (player1.cardsinInteger[0] == player2.cardsinInteger[0] && player1.cardsinInteger[1] > player2.cardsinInteger[1])
                 {

@@ -52,7 +52,7 @@ namespace cards.Game
             //b.Add(new Card(CardType.Heart, CardValue.Seven));
             //b.Add(new Card(CardType.Heart, CardValue.Six));
             //b.Add(new Card(CardType.Heart, CardValue.Five));
-            //b.Add(new Card(CardType.Diamond, CardValue.Six));
+            //b.Add(new Card(CardType.Spade, CardValue.Six));
             //b.Add(new Card(CardType.Diamond, CardValue.Two));
             //b.Add(new Card(CardType.Diamond, CardValue.King));
             //playerlist[0].DisplayeCardInHand();
@@ -61,29 +61,29 @@ namespace cards.Game
             //b = Cardlogiccs.SwapPositionofCards(b, 3, 6);
             //playerlist[0].DisplayeCardInHand();
 
-            //var c = playerlist[1].CardInHand;
-            //c.Clear();
-            //c.Add(new Card(CardType.Spade, CardValue.Ace));
-            //c.Add(new Card(CardType.Spade, CardValue.King));
-            //c.Add(new Card(CardType.Spade, CardValue.Queen));
-            //c.Add(new Card(CardType.Club, CardValue.Six));
-            //c.Add(new Card(CardType.Club, CardValue.Five));
-            //c.Add(new Card(CardType.Spade, CardValue.Four));
-            //c.Add(new Card(CardType.Heart, CardValue.Nine));
-            //c.Add(new Card(CardType.Heart, CardValue.Eight));
-            //c.Add(new Card(CardType.Heart, CardValue.Two));
-            //var a = playerlist[2].CardInHand;
-            //a.Clear();
-            //a.Add(new Card(CardType.Heart, CardValue.Nine));
-            //a.Add(new Card(CardType.Club, CardValue.Eight));
-            //a.Add(new Card(CardType.Club, CardValue.Ten));
-            //a.Add(new Card(CardType.Spade, CardValue.Nine));
-            //a.Add(new Card(CardType.Spade, CardValue.Eight));
-            //a.Add(new Card(CardType.Spade, CardValue.Two));
-            //a.Add(new Card(CardType.Club, CardValue.Two));
-            //a.Add(new Card(CardType.Heart, CardValue.Five));
-            //a.Add(new Card(CardType.Club, CardValue.Four));
-            //Cardlogiccs.ShowAllPlayersCard(playerlist);
+            var c = playerlist[1].CardInHand;
+            c.Clear();
+            c.Add(new Card(CardType.Diamond, CardValue.Three));
+            c.Add(new Card(CardType.Spade, CardValue.Four));
+            c.Add(new Card(CardType.Diamond, CardValue.Five));
+            c.Add(new Card(CardType.Spade, CardValue.Seven));
+            c.Add(new Card(CardType.Spade, CardValue.Eight));
+            c.Add(new Card(CardType.Club, CardValue.Nine));
+            c.Add(new Card(CardType.Heart, CardValue.Nine));
+            c.Add(new Card(CardType.Heart, CardValue.Eight));
+            c.Add(new Card(CardType.Heart, CardValue.Two));
+            var a = playerlist[2].CardInHand;
+            a.Clear();
+            a.Add(new Card(CardType.Heart, CardValue.Nine));
+            a.Add(new Card(CardType.Club, CardValue.Eight));
+            a.Add(new Card(CardType.Club, CardValue.Ten));
+            a.Add(new Card(CardType.Spade, CardValue.Nine));
+            a.Add(new Card(CardType.Spade, CardValue.Eight));
+            a.Add(new Card(CardType.Spade, CardValue.Two));
+            a.Add(new Card(CardType.Club, CardValue.Two));
+            a.Add(new Card(CardType.Heart, CardValue.Five));
+            a.Add(new Card(CardType.Club, CardValue.Four));
+            Cardlogiccs.ShowAllPlayersCard(playerlist);
 
             //start game
             StartPlaying(playerlist);
@@ -159,6 +159,11 @@ namespace cards.Game
                 {
 
                     //reuse flash logic code adjusting value
+                    bool doescurrentwinnerhasdraw = false;
+                    if (playerlist[CurrentIndexWinner].result == CardResult.DRAW && i!=1)
+                    {
+                        doescurrentwinnerhasdraw = true;
+                    }
                     CardCompareLogics.ResetWinnerlist();
                     playerlist[i].strength = playerlist[i].kittyStrength[round];
                     playerlist[i].cardsinInteger.Clear();
@@ -180,9 +185,13 @@ namespace cards.Game
                         continue;
                     }
                     CardCompareLogics.CompareTwoHands(playerlist[i], playerlist[CurrentIndexWinner]);
+                    
                     if (playerlist[i].result == CardResult.WIN)
                     {
                         CurrentIndexWinner = i;
+                    }else if (doescurrentwinnerhasdraw == true)
+                    {
+                        playerlist[CurrentIndexWinner].result= CardResult.DRAW;
                     }
                 }
                 //quad logic
@@ -196,6 +205,13 @@ namespace cards.Game
                 Cardlogiccs.ShowAllPlayersCard(playerlist);
 
                 if (roundwinnerlist.Count() > 1)
+                {
+                    //all draw
+                    AssignAllPlayerkittyStrength(CardResult.DRAW, round, playerlist);
+                    Console.WriteLine($"******  Round {round + 1} has ended as DRAW ******");
+                    Console.WriteLine();
+                }
+                else if (roundwinnerlist.Count==1 && roundwinnerlist[0].result==CardResult.DRAW)
                 {
                     //all draw
                     AssignAllPlayerkittyStrength(CardResult.DRAW, round, playerlist);
@@ -328,6 +344,7 @@ namespace cards.Game
                     }
                     //Console.WriteLine($"Checking Hand {j} of all players completed.");
                 }
+                AdjustStrengthinOrder(playerlist[i]);
             }
         }
 
@@ -402,61 +419,64 @@ namespace cards.Game
             }
             else
             {
-                //after confirm fill kitty strength
-                foreach (var item in HumanPlayer.CardInHand)
-                {
-                    HumanPlayer.FinalKittyHand.Add(item);
-
-                }
-                for (int i = 0; i < 3; i++)
-                {
-                    HumanPlayer.CardInHand.Clear();
-                    for (int j = 0; j < 3; j++)
-                    {
-                        HumanPlayer.CardInHand.Add(HumanPlayer.FinalKittyHand[j + i * 3]);
-                    }
-                    CardStrengthLogic.GetCardStrengthThreeCards(HumanPlayer);
-                    HumanPlayer.kittyStrength.Add(HumanPlayer.strength);
-                }
-                //check kitty strength and put it in order if its not
-                if (CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[1]) <
-                    CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[2]))
-                {
-                    CardStrength temp = HumanPlayer.kittyStrength[1];
-                    HumanPlayer.kittyStrength[1] = HumanPlayer.kittyStrength[2];
-                    HumanPlayer.kittyStrength[2] = temp;
-
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 4 - 1, 7 - 1);
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 5 - 1, 8 - 1);
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 6 - 1, 9 - 1);
-                }
-                if (CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[0]) <
-                    CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[2]))
-                {
-                    CardStrength temp = HumanPlayer.kittyStrength[0];
-                    HumanPlayer.kittyStrength[0] = HumanPlayer.kittyStrength[2];
-                    HumanPlayer.kittyStrength[2] = temp;
-
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 1 - 1, 7 - 1);
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 2 - 1, 8 - 1);
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 3 - 1, 9 - 1);
-                }
-                if (CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[0]) <
-                    CardStrengthUtils.GetPriorty(HumanPlayer.kittyStrength[1]))
-                {
-                    CardStrength temp = HumanPlayer.kittyStrength[0];
-                    HumanPlayer.kittyStrength[0] = HumanPlayer.kittyStrength[1];
-                    HumanPlayer.kittyStrength[1] = temp;
-
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 1 - 1, 4 - 1);
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 2 - 1, 5 - 1);
-                    Cardlogiccs.SwapPositionofCards(HumanPlayer.FinalKittyHand, 3 - 1, 6 - 1);
-                }
+                AdjustStrengthinOrder(HumanPlayer);
             }
             HumanPlayer.cardsinInteger = Cardlogiccs.GetCardIntegerValue(HumanPlayer.CardInHand);
             HumanPlayer.cardsinInteger.Sort();
         }
+        private void AdjustStrengthinOrder(Player.Player player)
+        {
+            //after confirm fill kitty strength
+            foreach (var item in player.CardInHand)
+            {
+                player.FinalKittyHand.Add(item);
 
+            }
+            for (int i = 0; i < 3; i++)
+            {
+                player.CardInHand.Clear();
+                for (int j = 0; j < 3; j++)
+                {
+                    player.CardInHand.Add(player.FinalKittyHand[j + i * 3]);
+                }
+                CardStrengthLogic.GetCardStrengthThreeCards(player);
+                player.kittyStrength.Add(player.strength);
+            }
+            //check kitty strength and put it in order if its not
+            if (CardStrengthUtils.GetPriorty(player.kittyStrength[1]) <
+                CardStrengthUtils.GetPriorty(player.kittyStrength[2]))
+            {
+                CardStrength temp = player.kittyStrength[1];
+                player.kittyStrength[1] = player.kittyStrength[2];
+                player.kittyStrength[2] = temp;
+
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 4 - 1, 7 - 1);
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 5 - 1, 8 - 1);
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 6 - 1, 9 - 1);
+            }
+            if (CardStrengthUtils.GetPriorty(player.kittyStrength[0]) <
+                CardStrengthUtils.GetPriorty(player.kittyStrength[2]))
+            {
+                CardStrength temp = player.kittyStrength[0];
+                player.kittyStrength[0] = player.kittyStrength[2];
+                player.kittyStrength[2] = temp;
+
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 1 - 1, 7 - 1);
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 2 - 1, 8 - 1);
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 3 - 1, 9 - 1);
+            }
+            if (CardStrengthUtils.GetPriorty(player.kittyStrength[0]) <
+                CardStrengthUtils.GetPriorty(player.kittyStrength[1]))
+            {
+                CardStrength temp = player.kittyStrength[0];
+                player.kittyStrength[0] = player.kittyStrength[1];
+                player.kittyStrength[1] = temp;
+
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 1 - 1, 4 - 1);
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 2 - 1, 5 - 1);
+                Cardlogiccs.SwapPositionofCards(player.FinalKittyHand, 3 - 1, 6 - 1);
+            }
+        }
         private void HandleCommonCards(Player.Player p)
         {
             for (int j = 0; j < p.cardsinInteger.Count(); j++)//Ace to 14 value
