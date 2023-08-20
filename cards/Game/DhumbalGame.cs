@@ -8,6 +8,7 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace cards.Game
 {
@@ -37,7 +38,7 @@ namespace cards.Game
             //New card instance
             Console.WriteLine();
             // Player logic
-            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS);
+            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS,false);
 
             //shuffle
             carddeck.Shuffle();
@@ -102,18 +103,17 @@ namespace cards.Game
             while (menu)
             {
                 Console.Clear();
-                Console.WriteLine("Your turn");
                 DhumbalLogAdd("** Your turn **");
+                ShowTitle();
                 ShowGround();
                 List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
                 Console.WriteLine();
-                Console.Write("     ");
+                Console.Write("           ");
                 HumanPlayer.DisplayeCardInHand();
                 Console.WriteLine();
                 string gap = new string(' ', gapSize);
                 string formattedText = gap + gap + gap + gap + gap + symbol;
-                Console.WriteLine("      {0}", formattedText);
-                ShowDhumbalLog();
+                Console.WriteLine("            {0}", formattedText);
 
                 if (HumanPlayer.ThrowCardList.Count > 0) // display throw card list
                 {
@@ -187,7 +187,8 @@ namespace cards.Game
                     {
                         //refresh screen logic
                         Console.Clear();
-                        Console.WriteLine("Your turn");
+                        DhumbalLogAddThrowlist(HumanPlayer);
+                        ShowTitle();
                         ShowGround();
                         Console.WriteLine();
                         Console.Write("     ");
@@ -196,8 +197,7 @@ namespace cards.Game
 
                         //extralogic
                         Cardlogiccs.CardInGroundThrowLogic(HumanPlayer.ThrowCardList, CardsOnGround);
-                        DhumbalLogAddThrowlist(HumanPlayer);
-                        ShowDhumbalLog();
+                        
                         HumanPlayer.ThrowCardList.Clear();
 
                         // pick from ground or deck
@@ -223,7 +223,7 @@ namespace cards.Game
                                 gapSize--;
                                 //refresh screen logic
                                 Console.Clear();
-                                Console.WriteLine("Your turn");
+                                ShowTitle();
                                 ShowGround();
                                 Console.WriteLine();
                                 Console.Write("     ");
@@ -241,16 +241,13 @@ namespace cards.Game
                                 gap = new string(' ', gapSize);
                                 formattedText1 = gap + gap + gap + gap + gap + gap + gap + symbol;
                                 Console.WriteLine("             {0}", formattedText1);
-
-                                Console.WriteLine($"left arrow {gapSize}");
-                                ShowDhumbalLog();
                             }
                             else if (keyInfo.Key == ConsoleKey.RightArrow && gapSize < currentcardsonground.Count())
                             {
                                 gapSize++;
                                 //refresh screen logic
                                 Console.Clear();
-                                Console.WriteLine("Your turn");
+                                ShowTitle();
                                 ShowGround();
                                 Console.WriteLine();
                                 Console.Write("     ");
@@ -269,7 +266,6 @@ namespace cards.Game
                                 formattedText1 = gap + gap + gap + gap + gap + gap + gap + symbol;
                                 Console.WriteLine("             {0}", formattedText1);
 
-                                ShowDhumbalLog();
                             }
                             else if (keyInfo.Key == ConsoleKey.Enter)
                             {
@@ -278,7 +274,6 @@ namespace cards.Game
                                     DhumbalLogAdd("** You Picked from Deck **");
                                     pickcomplete = true;
                                     carddeck.Draw(HumanPlayer);
-                                    Console.ReadLine();
                                 }
                                 else if (gapSize == 1)
                                 {
@@ -286,7 +281,6 @@ namespace cards.Game
                                     HumanPlayer.PickSingleCard(currentcardsonground[0]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[0], CardsOnGround);
                                     pickcomplete = true;
-                                    Console.ReadLine();
                                 }
                                 else if (gapSize == 2)
                                 {
@@ -294,7 +288,6 @@ namespace cards.Game
                                     HumanPlayer.PickSingleCard(currentcardsonground[1]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[1], CardsOnGround);
                                     pickcomplete = true;
-                                    Console.ReadLine();
                                 }
                                 else if (gapSize == 3)
                                 {
@@ -302,7 +295,6 @@ namespace cards.Game
                                     HumanPlayer.PickSingleCard(currentcardsonground[2]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[2], CardsOnGround);
                                     pickcomplete = true;
-                                    Console.ReadLine();
                                 }
                                 else if (gapSize == 4)
                                 {
@@ -310,7 +302,6 @@ namespace cards.Game
                                     HumanPlayer.PickSingleCard(currentcardsonground[3]);
                                     Cardlogiccs.CardInGroundPickLogic(currentcardsonground[3], CardsOnGround);
                                     pickcomplete = true;
-                                    Console.ReadLine();
                                 }
                             }
                             else
@@ -322,7 +313,7 @@ namespace cards.Game
                         menu = false;
                     }else
                     {
-                        Console.WriteLine(" throwlist incorrect try again!!");
+                        Console.WriteLine(" Invalid Throw!, Try again!!");
                         Console.ReadLine();
                         foreach (var item in HumanPlayer.ThrowCardList)// returning throwlist cards to hand
                         {
@@ -335,16 +326,67 @@ namespace cards.Game
         }
         private void ShowGround()
         {
-            Console.WriteLine("********* GROUND **********");
-            Console.WriteLine();
-            Console.Write("        ");
+            int width = 30;
+            int height = 10;
+            string text = "";
+            
             foreach (var card in CardsOnGround[CardsOnGround.Count() - 1])
             {
-                Cardlogiccs.PrintCard(card);
+                text += "   ";
             }
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("********* GROUND **********");
+            Console.WriteLine();
+            // Print top side
+            Console.Write("                     Jack             ");
+            Console.WriteLine("                     Event log ");
+            Console.Write("        " + new string('x', width));
+            Console.WriteLine("                 ----------------- ");
+
+            // Print left and right sides with text
+            for (int i = 0; i < height; i++)
+            {
+                if (i == height / 2)
+                {
+                    Console.Write("  Matt *");
+                    int padding = (width - text.Length) / 2;
+                    Console.Write(new string(' ', padding-4));
+                    int j = 4;
+                    foreach (var card in CardsOnGround[CardsOnGround.Count - 1])
+                    {
+                        Cardlogiccs.PrintCard(card);
+                        j = j - 2;
+                    }
+                    Console.Write(new string(' ', width - text.Length - padding+j)) ;
+                    Console.Write("* Bill");
+
+                }
+                else
+                {
+                    Console.Write("       *");
+                    Console.Write(new string(' ', width));
+                    Console.Write("*");
+                }
+                if (Dhumballog.Count-1-i >=0)
+                {
+                    string space = "               ";
+                    if (i == height / 2)
+                    {
+                        space = "          ";
+                    }
+                    Console.Write(space);
+                    ShowLogLine(Dhumballog.Count - 1 - i);
+                }
+                else
+                {
+                    Console.WriteLine();
+                }
+            }
+            // Print bottom side
+            Console.Write("        "+new string('x', width));
+            Console.WriteLine("                 ----------------- ");
+            Console.WriteLine("                     You ");
+
         }
         private void StartPlaying()
         {
@@ -405,7 +447,7 @@ namespace cards.Game
                         }
                         int maximumnum = playerlist[i].cardsinInteger.Max();
                         var maximumnumcard = playerlist[i].CardInHand.FirstOrDefault(c => c.GetCardValue() == CardConversion.ConversionIntegertoValue(maximumnum));
-                        playerlist[i].ThrowCardList.Add(maximumnumcard);
+                        playerlist[i].ThrowCardList.Add(item: maximumnumcard);
                     }
                     HandleCPUpickthrow(playerlist[i]);
                 }
@@ -452,7 +494,7 @@ namespace cards.Game
             return false;
         }
 
-        private bool Compatiblecolorrun(Player.Player player, Card card)
+        private static bool Compatiblecolorrun(Player.Player player, Card card)
         {
 
             if (CardConversion.ConversionValuetoInteger(card.GetCardValue()) > 2 &&
@@ -518,22 +560,21 @@ namespace cards.Game
 
             return false;
         }
-        private void ShowDhumbalLog()
+        private void ShowTitle()
         {
-            Console.WriteLine("** EventLog **");
-            Console.WriteLine("--------------");
-            int count = 0;
-            for (int i = Dhumballog.Count-1; i >= 0; i--)
-            {
-                Console.WriteLine(Dhumballog[i]);
-                count++;
-                if (count > 10)
-                {
-                    break;
-                }
-            }
-            Console.WriteLine("--------------");
+            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("                           DHUMBAL GAME   ");
+            Console.WriteLine("---------------------------------------------------------------------");
 
+        }
+        private void ShowLogLine(int i)
+        {
+            if (i == Dhumballog.Count - 1)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+            }
+            Console.WriteLine("  " + Dhumballog[i].ToString().ToUpper());
+            Console.ResetColor();
         }
         private void DhumbalLogAdd(string line)
         {

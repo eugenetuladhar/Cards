@@ -182,7 +182,7 @@ namespace cards.Utils
         }
         public static bool CheckXnumCards(List<Card> cardlist)// returns true if list has double or trail or quads
         {
-            for (int i = 1; i < cardlist.Count-1; i++)
+            for (int i = 1; i < cardlist.Count; i++)
             {
                 if (cardlist[i] != cardlist[i-1])
                 {
