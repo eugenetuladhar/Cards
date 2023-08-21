@@ -184,7 +184,7 @@ namespace cards.Utils
         {
             for (int i = 1; i < cardlist.Count; i++)
             {
-                if (cardlist[i] != cardlist[i-1])
+                if (cardlist[i].GetCardValue() != cardlist[i-1].GetCardValue())
                 {
                     return false;
                 }

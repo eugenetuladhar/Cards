@@ -66,14 +66,10 @@ namespace cards.Game
                 {
                     continue;
                 }
-                else if (Cardlogiccs.GetTotalIntegerValue(Finisher.CardInHand) <=
+                else if (Cardlogiccs.GetTotalIntegerValue(Finisher.CardInHand) >=
                     Cardlogiccs.GetTotalIntegerValue(player.CardInHand))
                 {
                     Finisher = player;
-                }
-                else
-                {
-                    Console.WriteLine("problem in winner dermining process");
                 }
             }
             Console.WriteLine(Finisher.GetName);
@@ -83,11 +79,6 @@ namespace cards.Game
         private void Deal()
         {
             Cardlogiccs.Deal(playerlist, carddeck, NUM_CARDS_TO_DEAL, false);
-            // display pick and throw cards
-            //foreach (var p in playerlist)
-            //{
-            //    p.TurnONOFFpickthrowMessage = true;
-            //}
         }
         private void HumanPlayerLogic(Player.Player HumanPlayer)
         {
@@ -191,7 +182,7 @@ namespace cards.Game
                         ShowTitle();
                         ShowGround();
                         Console.WriteLine();
-                        Console.Write("     ");
+                        Console.Write("           ");
                         HumanPlayer.DisplayeCardInHand();
                         Console.WriteLine();
 
@@ -226,7 +217,7 @@ namespace cards.Game
                                 ShowTitle();
                                 ShowGround();
                                 Console.WriteLine();
-                                Console.Write("     ");
+                                Console.Write("           ");
                                 HumanPlayer.DisplayeCardInHand();
                                 Console.WriteLine();
 
@@ -250,7 +241,7 @@ namespace cards.Game
                                 ShowTitle();
                                 ShowGround();
                                 Console.WriteLine();
-                                Console.Write("     ");
+                                Console.Write("           ");
                                 HumanPlayer.DisplayeCardInHand();
                                 Console.WriteLine();
 
