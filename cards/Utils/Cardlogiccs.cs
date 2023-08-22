@@ -47,7 +47,7 @@ namespace cards.Utils
             }
         }
 
-        public static void ShowAllPlayersCard(List<Player.Player> list)
+        public static void ShowAllPlayersCard(List<Player.Player> list,bool showStrength = true)
         {
             foreach (var player in list)
             {
@@ -56,8 +56,14 @@ namespace cards.Utils
                 {
                     hashave = "have";
                 }
-
-                Console.WriteLine($"{player.GetName} {hashave} {player.strength} :");
+                if(showStrength)
+                {
+                    Console.WriteLine($"{player.GetName} {hashave} {player.strength} :");
+                }
+                else
+                {
+                    Console.WriteLine($"{player.GetName} {hashave} :");
+                }
 
                 player.DisplayeCardInHand();
                 Console.WriteLine();

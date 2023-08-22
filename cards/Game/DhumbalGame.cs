@@ -23,8 +23,9 @@ namespace cards.Game
         private bool PICK = true;
         private bool THROW = false;
         private Player.Player Finisher { get; set; }
+        private string playerturn { get; set; }
         List<Player.Player> playerlist;
-        List<string> Dhumballog= new List<string>();
+        List<string> Dhumballog = new List<string>();
         public DhumbalGame()
         {
             carddeck = new CardCompleteDeck();
@@ -32,13 +33,14 @@ namespace cards.Game
             GameName = CardGameType.DHUMBAL;
             MAX_NUM_PLAYERS = 4;
             NUM_CARDS_TO_DEAL = 5;
+            playerturn = "None";
         }
         public void Run()
         {
             //New card instance
             Console.WriteLine();
             // Player logic
-            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS,false);
+            playerlist = Cardlogiccs.GetPlayers(MAX_NUM_PLAYERS, false);
 
             //shuffle
             carddeck.Shuffle();
@@ -51,11 +53,33 @@ namespace cards.Game
 
             //Display winner
             DetermineWinner();
-        }
 
+            //Asking Play again
+            Askplayagain(playerlist, carddeck);
+        }
+        private void Askplayagain(List<Player.Player> playerlist, CardCompleteDeck carddeck)
+        {
+            Console.Clear();
+            Console.WriteLine("Do you want to play again?(y/n)");
+            string playagain = Console.ReadLine();
+            if (playagain == "y" || playagain == "Y")
+            {
+                carddeck.Reset();
+                CardsOnGround = new List<List<Card>>();
+                Finisher.Reset();
+                Dhumballog.Clear();
+                gamecomplete = false;
+                foreach (var player in playerlist)
+                {
+                    player.Reset();
+                }
+                Run();
+            }
+        }
         private void DetermineWinner()
         {
-            Cardlogiccs.ShowAllPlayersCard(playerlist);
+            playerturn = "Game Completed";
+            Cardlogiccs.ShowAllPlayersCard(playerlist, false);
             Console.ReadLine();
             //Display winners
             Console.WriteLine("**  Winner   **");
@@ -72,7 +96,7 @@ namespace cards.Game
                     Finisher = player;
                 }
             }
-            Console.WriteLine(Finisher.GetName);
+            Console.WriteLine("  " + Finisher.GetName);
             Console.ReadLine();
         }
 
@@ -82,6 +106,7 @@ namespace cards.Game
         }
         private void HumanPlayerLogic(Player.Player HumanPlayer)
         {
+            playerturn = playerlist[0].GetName;
             // Sort the list based on Property1
             HumanPlayer.CardInHand.Sort((a, b) => a.GetCardType().CompareTo(b.GetCardType()));
 
@@ -93,15 +118,10 @@ namespace cards.Game
             bool menu = true;
             while (menu)
             {
-                Console.Clear();
                 DhumbalLogAdd("** Your turn **");
-                ShowTitle();
-                ShowGround();
+                RefreshScreen();
+
                 List<Card> currentcardsonground = CardsOnGround[CardsOnGround.Count - 1];
-                Console.WriteLine();
-                Console.Write("           ");
-                HumanPlayer.DisplayeCardInHand();
-                Console.WriteLine();
                 string gap = new string(' ', gapSize);
                 string formattedText = gap + gap + gap + gap + gap + symbol;
                 Console.WriteLine("            {0}", formattedText);
@@ -118,44 +138,17 @@ namespace cards.Game
 
                 if (keyInfo.Key == ConsoleKey.LeftArrow && gapSize > 0)
                 {
-                    if (move == true)
-                    { HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, gapSize, gapSize - 1); }
+                    //if (move == true)
+                    //{ HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, gapSize, gapSize - 1); }
                     gapSize--;
                 }
-                else if (keyInfo.Key == ConsoleKey.RightArrow && gapSize < HumanPlayer.CardInHand.Count-1)
+                else if (keyInfo.Key == ConsoleKey.RightArrow && gapSize < HumanPlayer.CardInHand.Count - 1)
                 {
-                    if (move == true)
-                    { HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, gapSize, gapSize + 1); }
+                    //if (move == true)
+                    //{ HumanPlayer.CardInHand = Cardlogiccs.SwapPositionofCards(HumanPlayer.CardInHand, gapSize, gapSize + 1); }
                     gapSize++;
                 }
-                else if (keyInfo.Key == ConsoleKey.Enter)
-                {
-                    if (move == false)
-                    {
-                        move = true;
-                        symbol = "\u2194";
-                    }
-                    else if (move == true)
-                    {
-                        move = false;
-                        symbol = "↑";
-                    }
-                }
-                else if (keyInfo.Key == ConsoleKey.X)
-                {
-                    if (Cardlogiccs.GetTotalIntegerValue(HumanPlayer.CardInHand) < 6)
-                    {
-                        //determinewinner
-                        Finisher = HumanPlayer;
-                        gamecomplete = true;
-                        menu = false;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Not eligible to submit. Should be less than 6");
-                    }
-                }
-                else if(keyInfo.Key == ConsoleKey.A)
+                else if (keyInfo.Key == ConsoleKey.DownArrow)
                 {
                     if (HumanPlayer.CardInHand.Count > 0)
                     {
@@ -169,26 +162,52 @@ namespace cards.Game
                         Console.WriteLine("No more cards in hand");
                         Console.ReadLine();
                     }
-                    
+                    //if (move == false)
+                    //{
+                    //    move = true;
+                    //    symbol = "\u2194";
+                    //}
+                    //else if (move == true)
+                    //{
+                    //    move = false;
+                    //    symbol = "↑";
+                    //}
                 }
-                else if (keyInfo.Key == ConsoleKey.T)
+                else if (keyInfo.Key == ConsoleKey.X)
                 {
-                    if(HumanPlayer.ThrowCardList.Count>0 && (CardStrengthLogic.CheckXnumCards(HumanPlayer.ThrowCardList)||
-                        HumanPlayer.ThrowCardList.Count==1 || CardStrengthLogic.CheckColorRunCards(HumanPlayer.ThrowCardList)))
+                    if (Cardlogiccs.GetTotalIntegerValue(HumanPlayer.CardInHand) < 6)
+                    {
+                        //determinewinner
+                        Finisher = HumanPlayer;
+                        gamecomplete = true;
+                        menu = false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not eligible to submit. Should be less than 6");
+                        Thread.Sleep(1000);
+                    }
+                }
+                else if (keyInfo.Key == ConsoleKey.Escape)
+                {
+                    foreach (var item in HumanPlayer.ThrowCardList)// returning throwlist cards to hand
+                    {
+                        HumanPlayer.CardInHand.Add(item);
+                    }
+                    HumanPlayer.ThrowCardList.Clear();
+                }
+                else if (keyInfo.Key == ConsoleKey.Enter)
+                {
+                    if (HumanPlayer.ThrowCardList.Count > 0 && (CardStrengthLogic.CheckXnumCards(HumanPlayer.ThrowCardList) ||
+                        HumanPlayer.ThrowCardList.Count == 1 || CardStrengthLogic.CheckColorRunCards(HumanPlayer.ThrowCardList)))
                     {
                         //refresh screen logic
-                        Console.Clear();
                         DhumbalLogAddThrowlist(HumanPlayer);
-                        ShowTitle();
-                        ShowGround();
-                        Console.WriteLine();
-                        Console.Write("           ");
-                        HumanPlayer.DisplayeCardInHand();
-                        Console.WriteLine();
+                        RefreshScreen();
 
                         //extralogic
                         Cardlogiccs.CardInGroundThrowLogic(HumanPlayer.ThrowCardList, CardsOnGround);
-                        
+
                         HumanPlayer.ThrowCardList.Clear();
 
                         // pick from ground or deck
@@ -213,13 +232,7 @@ namespace cards.Game
                             {
                                 gapSize--;
                                 //refresh screen logic
-                                Console.Clear();
-                                ShowTitle();
-                                ShowGround();
-                                Console.WriteLine();
-                                Console.Write("           ");
-                                HumanPlayer.DisplayeCardInHand();
-                                Console.WriteLine();
+                                RefreshScreen();
 
                                 Console.Write("Pick from: DECK ");
                                 foreach (var singlecard in currentcardsonground)
@@ -237,14 +250,7 @@ namespace cards.Game
                             {
                                 gapSize++;
                                 //refresh screen logic
-                                Console.Clear();
-                                ShowTitle();
-                                ShowGround();
-                                Console.WriteLine();
-                                Console.Write("           ");
-                                HumanPlayer.DisplayeCardInHand();
-                                Console.WriteLine();
-
+                                RefreshScreen();
                                 Console.Write(" Pick from: DECK ");
                                 foreach (var singlecard in currentcardsonground)
                                 {
@@ -302,10 +308,17 @@ namespace cards.Game
                         }
                         gapSize = 0;
                         menu = false;
-                    }else
+                    } else
                     {
-                        Console.WriteLine(" Invalid Throw!, Try again!!");
-                        Console.ReadLine();
+                        if(HumanPlayer.ThrowCardList.Count==0)
+                        {
+                            Console.WriteLine(" Press DownArrow to move cards in throwlist, Try again!!");
+                        }
+                        else
+                        {
+                            Console.WriteLine(" Invalid Throw!, Try again!!");
+                        }
+                        Thread.Sleep(1500);
                         foreach (var item in HumanPlayer.ThrowCardList)// returning throwlist cards to hand
                         {
                             HumanPlayer.CardInHand.Add(item);
@@ -315,12 +328,23 @@ namespace cards.Game
                 }
             }
         }
+        private void RefreshScreen()
+        {
+            Console.Clear();
+            //DhumbalLogAddThrowlist(currentPlayer);
+            ShowTitle();
+            ShowGround();
+            Console.WriteLine();
+            Console.Write("           ");
+            playerlist[0].DisplayeCardInHand();
+            Console.WriteLine();
+        }
         private void ShowGround()
         {
             int width = 30;
             int height = 10;
             string text = "";
-            
+            string turnindicator = "   ";
             foreach (var card in CardsOnGround[CardsOnGround.Count() - 1])
             {
                 text += "   ";
@@ -329,17 +353,32 @@ namespace cards.Game
             Console.WriteLine();
             Console.WriteLine();
             // Print top side
-            Console.Write("                     Jack             ");
-            Console.WriteLine("                     Event log ");
-            Console.Write("        " + new string('x', width));
-            Console.WriteLine("                 ----------------- ");
+            if (playerturn == playerlist[2].GetName)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                turnindicator = "<--";
+            }
+            Console.Write($"                       JACK {turnindicator}       ");
+            Console.ResetColor();
+            Console.WriteLine("                            Event log ");
+            Console.Write("           " + new string('x', width));
+            Console.WriteLine("                 ----------------------------------- ");
+            turnindicator = "   ";
 
             // Print left and right sides with text
             for (int i = 0; i < height; i++)
             {
                 if (i == height / 2)
                 {
-                    Console.Write("  Matt *");
+                    if (playerturn == playerlist[3].GetName)
+                    {
+                        turnindicator = "<--";
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    Console.Write($"  MATT {turnindicator}");
+                    Console.ResetColor();
+                    Console.Write("*");
+                    turnindicator = "   ";
                     int padding = (width - text.Length) / 2;
                     Console.Write(new string(' ', padding-4));
                     int j = 4;
@@ -349,12 +388,19 @@ namespace cards.Game
                         j = j - 2;
                     }
                     Console.Write(new string(' ', width - text.Length - padding+j)) ;
-                    Console.Write("* Bill");
-
+                    Console.Write("*");
+                    if (playerturn == playerlist[1].GetName)
+                    {
+                        turnindicator = "<--";
+                        Console.ForegroundColor = ConsoleColor.Red;
+                    }
+                    Console.Write($" BILL {turnindicator}");
+                    Console.ResetColor();
+                    turnindicator = "   ";
                 }
                 else
                 {
-                    Console.Write("       *");
+                    Console.Write("          *");
                     Console.Write(new string(' ', width));
                     Console.Write("*");
                 }
@@ -363,7 +409,7 @@ namespace cards.Game
                     string space = "               ";
                     if (i == height / 2)
                     {
-                        space = "          ";
+                        space = "      ";
                     }
                     Console.Write(space);
                     ShowLogLine(Dhumballog.Count - 1 - i);
@@ -374,9 +420,15 @@ namespace cards.Game
                 }
             }
             // Print bottom side
-            Console.Write("        "+new string('x', width));
-            Console.WriteLine("                 ----------------- ");
-            Console.WriteLine("                     You ");
+            Console.Write("           "+new string('x', width));
+            Console.WriteLine("                 ---------------------------------- ");
+            if (playerturn == playerlist[0].GetName)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                turnindicator = "<--";
+            }
+            Console.WriteLine($"                       YOU {turnindicator}");
+            Console.ResetColor();
 
         }
         private void StartPlaying()
@@ -390,9 +442,11 @@ namespace cards.Game
 
                 //human player
                 HumanPlayerLogic(playerlist[0]);
+                RefreshScreen();
                 // comp player
                 for (int i = 1; i < playerlist.Count(); i++)
                 {
+                    playerturn = playerlist[i].GetName;
                     DhumbalLogAdd($"** {playerlist[i].GetName}'s turn **");
                     //cpu player turn
                     if (Cardlogiccs.GetTotalIntegerValue(playerlist[i].CardInHand) < 6)
@@ -403,7 +457,7 @@ namespace cards.Game
 
                     playerlist[i].cardsinInteger = Cardlogiccs.GetCardIntegerValue(playerlist[i].CardInHand);
                     playerlist[i].cardsinInteger.Sort();
-
+                    Thread.Sleep(500);
                     //checkquads and trail
                     if (CardStrengthLogic.CheckColorRunCards(playerlist[i], 5, GameName))
                     {
@@ -440,7 +494,12 @@ namespace cards.Game
                         var maximumnumcard = playerlist[i].CardInHand.FirstOrDefault(c => c.GetCardValue() == CardConversion.ConversionIntegertoValue(maximumnum));
                         playerlist[i].ThrowCardList.Add(item: maximumnumcard);
                     }
+                    RefreshScreen();
+                    Thread.Sleep(500);
                     HandleCPUpickthrow(playerlist[i]);
+                    RefreshScreen();
+                    Thread.Sleep(500);
+
                 }
             }
         }
@@ -553,19 +612,28 @@ namespace cards.Game
         }
         private void ShowTitle()
         {
-            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------");
             Console.WriteLine("                           DHUMBAL GAME   ");
-            Console.WriteLine("---------------------------------------------------------------------");
+            Console.WriteLine("-------------------------------------------------------------------------------");
+            Console.WriteLine("CONTROLS : PRESS LEFT RIGHT ARROW TO NAVIGATE CARDS, DOWNARROW TO CHOOSE CARD ");
+            Console.WriteLine("           TO THROW, ENTER TO CONFIRM AND PRESS X TO SUBMIT CARD. ENJOY. - MAKER");
+            Console.WriteLine("-------------------------------------------------------------------------------");
 
         }
         private void ShowLogLine(int i)
         {
+            string indicator1 = "   ";
+            string indicator2 = "   ";
             if (i == Dhumballog.Count - 1)
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
+                indicator1 = "<--";
+                indicator2 = "-->";
             }
-            Console.WriteLine("  " + Dhumballog[i].ToString().ToUpper());
+            Console.WriteLine(" " +indicator2+" "+ Dhumballog[i].ToString().ToUpper() +" "+ indicator1);
             Console.ResetColor();
+            indicator1 = "   ";
+            indicator2 = "   ";
         }
         private void DhumbalLogAdd(string line)
         {

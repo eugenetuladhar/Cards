@@ -20,7 +20,7 @@ namespace cards
                 Console.WriteLine();
                 Console.WriteLine("    1 . FLASH");
                 Console.WriteLine("    2 . KITTY");
-                Console.WriteLine("    3 . DHUMBAL (Under Construction)");
+                Console.WriteLine("    3 . DHUMBAL (Beta Version)");
                 Console.WriteLine("    4 . CALLBREAK (Postponed)");
                 Console.WriteLine("    0 . EXIT");
                 value = Console.ReadLine();
